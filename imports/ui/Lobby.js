@@ -3,6 +3,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Random } from 'meteor/random';
 
 import { Rooms } from '../api/rooms.js';
+import Modal from './Modal';
 import { Link } from "react-router-dom";
 
 class Lobby extends React.Component {
@@ -12,8 +13,13 @@ class Lobby extends React.Component {
     this.state = {
     	roomName: '',
     	userName: '',
+    	showRoomModal: false,
     };
   }
+
+  showRoomModal = () => {
+    this.setState({ showRoomModal: true });
+  };
 
   updateRoomName = (e) => {
   	this.setState({
@@ -38,27 +44,21 @@ class Lobby extends React.Component {
  
     this.setState({
   		roomName: '',
+  		showRoomModal: false,
   	});
-	}
-	
-	roomForm() {
-		return(
-			<div>
-				<form className="new-room" onSubmit={this.addRoom}>
-				  <input type="text" placeholder="Type to add new room" onChange={this.updateRoomName} value={this.state.roomName} />
-				</form>
-			</div>
-		);
 	}
 
 	roomList() {
 		return(
-			<div style={{border: 'solid black 1px'}}>
-				<h3>Rooms:</h3>
-				{this.roomForm()}
-				<ul>
-					{this.props.rooms.map((room) => (<li key={room._id}><Link to={`/room/${room._id}`}>{room.text}</Link></li>))}
-				</ul>
+			<div>
+				<h3>Open Rooms</h3>
+				<div style={{border: 'solid black 1px', padding: '10px'}}>
+					{this.props.rooms.map((room) => (
+						<div key={room._id} style={{marginTop: '5px', marginBottom: '5px'}}>
+							<div style={{display: 'inline-block'}}><Link style={{marginLeft: '15px'}} to={`/room/${room._id}`}><button>Join</button></Link></div><div style={{display: 'inline-block', marginLeft: '15px'}}>{room.text}</div>
+						</div>
+					))}
+				</div>
 			</div>
 		);
 	}
@@ -83,6 +83,16 @@ class Lobby extends React.Component {
 		);
 	}
 
+	modals() {
+		return(
+			<Modal show={this.state.showRoomModal} handleClose={this.addRoom}>
+      	<label>Enter a room name:
+			  <input type="text" onChange={this.updateRoomName} value={this.state.roomName} />
+			  </label>
+      </Modal>
+		);
+	}
+
 	render() {
 		const loggedIn = localStorage.getItem('userId') !== null;
 
@@ -92,7 +102,11 @@ class Lobby extends React.Component {
 			);
 		} else {
 			return(
-				this.roomList()
+				<div>
+	        <button onClick={this.showRoomModal}>Create New Room</button>
+					{this.roomList()}
+					{this.modals()}
+				</div>
 			);
 		}
 	}

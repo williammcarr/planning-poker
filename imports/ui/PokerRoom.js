@@ -49,7 +49,7 @@ class PokerRoom extends React.Component {
   ticketList() {
     return(
       <div>
-        {this.props.room.text}
+        <h3 style={{textAlign: 'center'}}>{this.props.room.text}</h3>
         {this.addTicketForm()}
         <ul>
           {this.props.tickets.map((ticket) => (<li key={ticket._id}>{ticket.text}</li>))}
@@ -67,7 +67,7 @@ class PokerRoom extends React.Component {
 
     return(
       <div>
-        <Link to="/">Lobby</Link>
+        <Link to="/"><button>Return to Lobby</button></Link>
         <div>
           {this.ticketList()}
         </div>
