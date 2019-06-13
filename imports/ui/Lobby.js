@@ -1,66 +1,81 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import { Random } from 'meteor/random';
 
-import { Tickets } from '../api/tickets.js';
+import { Rooms } from '../api/rooms.js';
+import { Link } from "react-router-dom";
 
 class Lobby extends React.Component {
 	constructor(props) {
     super(props);
  
     this.state = {
-      ticketName: '',
+    	roomName: '',
+    	userName: '',
     };
   }
 
-  updateTicketName = (e) => {
+  updateRoomName = (e) => {
   	this.setState({
-  		ticketName: e.target.value,
+  		roomName: e.target.value,
   	});
   }
 
-	addTicket = (e) => {
+  updateUserName = (e) => {
+  	this.setState({
+  		userName: e.target.value,
+  	});
+  }
+
+	addRoom = (e) => {
 		e.preventDefault();
  
-    Tickets.insert({
-    	text: this.state.ticketName,
+    Rooms.insert({
+    	text: this.state.roomName, 
+    	userId: localStorage.getItem('userId'), 
+    	userName: localStorage.getItem('userName'),
     });
  
     this.setState({
-  		ticketName: '',
+  		roomName: '',
   	});
 	}
 	
-	addTicketForm() {
+	roomForm() {
 		return(
 			<div>
-				<h3>Tickets to Point</h3>
-
-				<form className="new-ticket" onSubmit={this.addTicket}>
-				  <input type="text" placeholder="Type to add new ticket" onChange={this.updateTicketName} value={this.state.ticketName} />
+				<form className="new-room" onSubmit={this.addRoom}>
+				  <input type="text" placeholder="Type to add new room" onChange={this.updateRoomName} value={this.state.roomName} />
 				</form>
 			</div>
 		);
 	}
 
-	ticketList() {
+	roomList() {
 		return(
-			<div>
-				{this.addTicketForm()}
+			<div style={{border: 'solid black 1px'}}>
+				<h3>Rooms:</h3>
+				{this.roomForm()}
 				<ul>
-					{this.props.tickets.map((ticket) => (<li key={ticket._id}>{ticket.text}</li>))}
+					{this.props.rooms.map((room) => (<li key={room._id}><Link to={`/room/${room._id}`}>{room.text}</Link></li>))}
 				</ul>
 			</div>
 		);
+	}
+
+	handleLogin = () => {
+		localStorage.setItem('userId', Random.id());
+		localStorage.setItem('userName', this.state.userName);
 	}
 
 	login() {
 		return(
 			<div>
 				<h1>Planning Poker!</h1>
-				<form>
+				<form onSubmit={this.handleLogin}>
 					<label>
 						Enter your name:
-						<input/>
+						<input value={this.state.userName} onChange={this.updateUserName}/>
 					</label>
 					<button>Login</button>
 				</form>
@@ -69,7 +84,7 @@ class Lobby extends React.Component {
 	}
 
 	render() {
-		const loggedIn = true;
+		const loggedIn = localStorage.getItem('userId') !== null;
 
 		if (!loggedIn) {
 			return(
@@ -77,7 +92,7 @@ class Lobby extends React.Component {
 			);
 		} else {
 			return(
-				this.ticketList()
+				this.roomList()
 			);
 		}
 	}
@@ -85,6 +100,6 @@ class Lobby extends React.Component {
 
 export default withTracker(() => {
   return {
-    tickets: Tickets.find({}).fetch(),
+    rooms: Rooms.find({}).fetch(),
   };
 })(Lobby);
