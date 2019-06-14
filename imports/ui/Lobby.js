@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import { Random } from 'meteor/random';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Table from 'react-bootstrap/Table';
 
 import ChatBox from './ChatBox';
+import RoomList from './RoomList';
 import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
 
@@ -50,21 +51,6 @@ class Lobby extends React.Component {
   		roomName: '',
   		showRoomModal: false,
   	});
-	}
-
-	roomList() {
-		return(
-			<div>
-				<h3>Open Rooms</h3>
-				<div style={{border: 'solid black 1px', padding: '10px'}}>
-					{this.props.rooms.map((room) => (
-						<div key={room._id} style={{marginTop: '5px', marginBottom: '5px'}}>
-							<div style={{display: 'inline-block'}}><Link style={{marginLeft: '15px'}} to={`/room/${room._id}`}><Button>Join</Button></Link></div><div style={{display: 'inline-block', marginLeft: '15px'}}>{room.text}</div>
-						</div>
-					))}
-				</div>
-			</div>
-		);
 	}
 
 	handleLogin = () => {
@@ -118,7 +104,7 @@ class Lobby extends React.Component {
 			return(
 				<div>
 	        <Button onClick={this.showRoomModal}>Create New Room</Button>
-					{this.roomList()}
+					<RoomList rooms={this.props.rooms}/>
 					<ChatBox location="lobby" messages={this.props.messages}/>
 					{this.modals()}
 				</div>

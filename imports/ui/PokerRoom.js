@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import ChatBox from './ChatBox';
 import { Messages } from '../api/messages.js';
