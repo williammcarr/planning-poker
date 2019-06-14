@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Card from 'react-bootstrap/Card';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import FormControl from 'react-bootstrap/FormControl';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 import { Messages } from '../api/messages.js';
 
@@ -32,14 +32,14 @@ class ChatBox extends React.Component {
       storedUserColors = JSON.parse(localStorage.getItem('userColors'));
       
       if (storedUserColors) {
-        colorString = storedUserColors[message.userName];
+        colorString = storedUserColors[message.userId];
       }
 
       if (!colorString) {
         const randInt = Math.floor(Math.random() * 360);
         const colorInt = randInt - (randInt % 10);
 
-        userColors[message.userName] = `hsl(${colorInt},100%,50%)`;
+        userColors[message.userId] = `hsl(${colorInt},100%,50%)`;
         localStorage.setItem('userColors', JSON.stringify(userColors));
       }
     });
@@ -52,7 +52,8 @@ class ChatBox extends React.Component {
 
     Messages.insert({
       text: this.state.chatMessage,
-      location: 'lobby',
+      location: this.props.location,
+      userId: localStorage.getItem('userId'),
       userName: localStorage.getItem('userName'),
     });
 
@@ -74,7 +75,7 @@ class ChatBox extends React.Component {
           <Card.Header>Chat</Card.Header>
           <Card.Body>
             {this.props.messages.map((message) => (
-              <Card.Text key={message._id}><span style={{color: `${JSON.parse(localStorage.getItem('userColors'))[message.userName]}`}}>{message.userName}:</span> {message.text}</Card.Text>
+              <Card.Text key={message._id}><span style={{color: `${JSON.parse(localStorage.getItem('userColors'))[message.userId]}`}}>{message.userName}:</span> {message.text}</Card.Text>
             ))}
           </Card.Body>
         </Card>

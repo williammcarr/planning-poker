@@ -1,15 +1,14 @@
 import React from 'react';
-import { withTracker } from 'meteor/react-meteor-data';
-import { Random } from 'meteor/random';
-
 import { Link } from "react-router-dom";
-
-import ChatBox from './ChatBox';
-import { Rooms } from '../api/rooms.js';
-import { Messages } from '../api/messages.js';
+import { Random } from 'meteor/random';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+
+import ChatBox from './ChatBox';
+import { Messages } from '../api/messages.js';
+import { Rooms } from '../api/rooms.js';
 
 class Lobby extends React.Component {
 	constructor(props) {
@@ -94,14 +93,16 @@ class Lobby extends React.Component {
 				<Modal.Header>
 					<Modal.Title>Create Room</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-	      	<label>Enter a room name:
-				  <input type="text" onChange={this.updateRoomName} value={this.state.roomName} />
-				  </label>
-			  </Modal.Body>
-			  <Modal.Footer>
-			  	<Button onClick={this.addRoom}>Create Room</Button>
-			  </Modal.Footer>
+				<form onSubmit={this.addRoom}>
+					<Modal.Body>
+		      	<label>Enter a room name:
+					  <input type="text" onChange={this.updateRoomName} value={this.state.roomName} />
+					  </label>
+				  </Modal.Body>
+				  <Modal.Footer>
+				  	<Button type="submit">Create Room</Button>
+				  </Modal.Footer>
+			  </form>
       </Modal>
 		);
 	}
@@ -118,7 +119,7 @@ class Lobby extends React.Component {
 				<div>
 	        <Button onClick={this.showRoomModal}>Create New Room</Button>
 					{this.roomList()}
-					<ChatBox messages={this.props.messages}/>
+					<ChatBox location="lobby" messages={this.props.messages}/>
 					{this.modals()}
 				</div>
 			);

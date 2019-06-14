@@ -1,17 +1,27 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { withTracker } from 'meteor/react-meteor-data';
 
-import { Tickets } from '../api/tickets.js';
-import { Rooms } from '../api/rooms.js';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
-import { Link } from "react-router-dom";
+import ChatBox from './ChatBox';
+import { Messages } from '../api/messages.js';
+import { Rooms } from '../api/rooms.js';
+import TicketList from './TicketList';
+import { Tickets } from '../api/tickets.js';
 
 class PokerRoom extends React.Component {
   constructor(props) {
     super(props);
  
     this.state = {
+      roomId: null,
+      ticketDescription: '',
       ticketName: '',
+      showTicketModal: false,
     };
   }
 
@@ -21,40 +31,53 @@ class PokerRoom extends React.Component {
     });
   }
 
+  updateTicketDescription = (e) => {
+    this.setState({
+      ticketDescription: e.target.value,
+    });
+  }
+
   addTicket = (e) => {
     e.preventDefault();
  
     Tickets.insert({
-      text: this.state.ticketName, 
-      roomId: this.props.room._id
+      name: this.state.ticketName,
+      description: this.state.ticketDescription,
+      roomId: this.props.room._id,
+      points: null,
     });
  
     this.setState({
       ticketName: '',
+      ticketDescription: '',
+      showTicketModal: false,
     });
   }
-  
-  addTicketForm() {
-    return(
-      <div>
-        <h3>Tickets to Point</h3>
 
-        <form className="new-ticket" onSubmit={this.addTicket}>
-          <input type="text" placeholder="Type to add new ticket" onChange={this.updateTicketName} value={this.state.ticketName} />
+  showTicketModal = () => {
+    this.setState({ showTicketModal: true });
+  };
+
+  modals() {
+    return(
+      <Modal show={this.state.showTicketModal}>
+        <Modal.Header>
+          <Modal.Title>Create Ticket</Modal.Title>
+        </Modal.Header>
+        <form onSubmit={this.addTicket}>
+          <Modal.Body>
+            <label>Enter Ticket Name:
+            <input type="text" onChange={this.updateTicketName} value={this.state.ticketName} />
+            </label>
+            <label>Enter Ticket description:
+            <input type="text" onChange={this.updateTicketDescription} value={this.state.ticketDescription} />
+            </label>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit">Create Ticket</Button>
+          </Modal.Footer>
         </form>
-      </div>
-    );
-  }
-
-  ticketList() {
-    return(
-      <div>
-        <h3 style={{textAlign: 'center'}}>{this.props.room.text}</h3>
-        {this.addTicketForm()}
-        <ul>
-          {this.props.tickets.map((ticket) => (<li key={ticket._id}>{ticket.text}</li>))}
-        </ul>
-      </div>
+      </Modal>
     );
   }
 
@@ -67,10 +90,23 @@ class PokerRoom extends React.Component {
 
     return(
       <div>
-        <Link to="/"><button>Return to Lobby</button></Link>
+        <Link to="/"><Button>Return to Lobby</Button></Link>
+        <h3 style={{textAlign: 'center'}}>{this.props.room.text}</h3>
         <div>
-          {this.ticketList()}
+          <Button onClick={this.showTicketModal}>Add Ticket</Button>
+          <Row>
+            <Col className="xs-6">
+              <TicketList tickets={this.props.unpointedTickets} room={this.props.room} title="Unpointed Tickets"/>
+            </Col>
+            <Col className="xs-6">
+              <TicketList tickets={this.props.pointedTickets} room={this.props.room} title="Pointed Tickets"/>
+            </Col>
+          </Row>
         </div>
+        <div>
+          <ChatBox location={this.props.room._id} messages={this.props.messages}/>
+        </div>
+        {this.modals()}
       </div>
     );
   }
@@ -81,6 +117,9 @@ export default withTracker((route) => {
 
   return {
     tickets: Tickets.find({roomId}).fetch(),
+    pointedTickets: Tickets.find({roomId: roomId, points: { $gte: 1 }}).fetch(),
+    unpointedTickets: Tickets.find({roomId: roomId, points: null }).fetch(),
     room: Rooms.findOne({_id: roomId}),
+    messages: Messages.find({location: roomId}).fetch(),
   };
 })(PokerRoom);
