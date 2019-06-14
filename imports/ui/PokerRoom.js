@@ -16,7 +16,7 @@ import { Tickets } from '../api/tickets.js';
 class PokerRoom extends React.Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
       roomId: null,
       ticketDescription: '',
@@ -39,14 +39,14 @@ class PokerRoom extends React.Component {
 
   addTicket = (e) => {
     e.preventDefault();
- 
+
     Tickets.insert({
       name: this.state.ticketName,
       description: this.state.ticketDescription,
       roomId: this.props.room._id,
       points: null,
     });
- 
+
     this.setState({
       ticketName: '',
       ticketDescription: '',
@@ -82,6 +82,12 @@ class PokerRoom extends React.Component {
   }
 
   render() {
+    const loggedIn = localStorage.getItem('userId') !== null;
+
+    if (!loggedIn) {
+        this.props.history.push('/');
+    }
+
     if(this.props.room == null || this.props.tickets == null) {
       return (
         <p>Loading...</p>

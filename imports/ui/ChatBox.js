@@ -5,46 +5,46 @@ import Card from 'react-bootstrap/Card';
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 
+import get from 'lodash/get';
+
 import { Messages } from '../api/messages.js';
 
 class ChatBox extends React.Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
       chatMessage: '',
     };
+
+    ChatBox.setUserColors(props.messages);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.messages !== prevState.messages) {
-      ChatBox.setUserColors(nextProps.messages);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.messages.length !== this.props.messages.length) {
+      ChatBox.setUserColors(this.props.messages);
     }
-
-    return null;
   }
 
   static setUserColors(messages) {
-    var userColors = {};
-    var colorString, storedUserColors;
-     
+    let userColors = {};
+
+    if (localStorage.getItem('userColors')) {
+      userColors = JSON.parse(localStorage.getItem('userColors'));
+    }
+
     messages.forEach((message) => {
-      storedUserColors = JSON.parse(localStorage.getItem('userColors'));
-      
-      if (storedUserColors) {
-        colorString = storedUserColors[message.userId];
-      }
+      let colorString = get(userColors, message.userId, false);
 
       if (!colorString) {
         const randInt = Math.floor(Math.random() * 360);
         const colorInt = randInt - (randInt % 10);
 
         userColors[message.userId] = `hsl(${colorInt},100%,50%)`;
-        localStorage.setItem('userColors', JSON.stringify(userColors));
       }
     });
 
-    return(userColors);
+    localStorage.setItem('userColors', JSON.stringify(userColors));
   }
 
   chatSubmit = (e) => {
@@ -68,14 +68,16 @@ class ChatBox extends React.Component {
     });
   }
 
-	render() {
-		return(
+  render() {
+    const userColors = JSON.parse(localStorage.getItem('userColors'));
+
+    return(
       <React.Fragment>
-    		<Card className="mt-4">
+        <Card className="mt-4">
           <Card.Header>Chat</Card.Header>
-          <Card.Body>
+          <Card.Body style={{ maxHeight: 300, overflowY: 'scroll' }}>
             {this.props.messages.map((message) => (
-              <Card.Text key={message._id}><span style={{color: `${JSON.parse(localStorage.getItem('userColors'))[message.userId]}`}}>{message.userName}:</span> {message.text}</Card.Text>
+              <Card.Text key={message._id}><span style={{color: `${userColors[message.userId]}`}}>{message.userName}:</span> {message.text}</Card.Text>
             ))}
           </Card.Body>
         </Card>
@@ -88,8 +90,8 @@ class ChatBox extends React.Component {
           </InputGroup>
         </form>
       </React.Fragment>
-		);
-	}
+    );
+  }
 }
 
 export default ChatBox;
