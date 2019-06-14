@@ -2,9 +2,14 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Random } from 'meteor/random';
 
-import { Rooms } from '../api/rooms.js';
-import Modal from './Modal';
 import { Link } from "react-router-dom";
+
+import ChatBox from './ChatBox';
+import { Rooms } from '../api/rooms.js';
+import { Messages } from '../api/messages.js';
+
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 class Lobby extends React.Component {
 	constructor(props) {
@@ -55,7 +60,7 @@ class Lobby extends React.Component {
 				<div style={{border: 'solid black 1px', padding: '10px'}}>
 					{this.props.rooms.map((room) => (
 						<div key={room._id} style={{marginTop: '5px', marginBottom: '5px'}}>
-							<div style={{display: 'inline-block'}}><Link style={{marginLeft: '15px'}} to={`/room/${room._id}`}><button>Join</button></Link></div><div style={{display: 'inline-block', marginLeft: '15px'}}>{room.text}</div>
+							<div style={{display: 'inline-block'}}><Link style={{marginLeft: '15px'}} to={`/room/${room._id}`}><Button>Join</Button></Link></div><div style={{display: 'inline-block', marginLeft: '15px'}}>{room.text}</div>
 						</div>
 					))}
 				</div>
@@ -77,7 +82,7 @@ class Lobby extends React.Component {
 						Enter your name:
 						<input value={this.state.userName} onChange={this.updateUserName}/>
 					</label>
-					<button>Login</button>
+					<Button>Login</Button>
 				</form>
 			</div>
 		);
@@ -85,10 +90,18 @@ class Lobby extends React.Component {
 
 	modals() {
 		return(
-			<Modal show={this.state.showRoomModal} handleClose={this.addRoom}>
-      	<label>Enter a room name:
-			  <input type="text" onChange={this.updateRoomName} value={this.state.roomName} />
-			  </label>
+			<Modal show={this.state.showRoomModal}>
+				<Modal.Header>
+					<Modal.Title>Create Room</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+	      	<label>Enter a room name:
+				  <input type="text" onChange={this.updateRoomName} value={this.state.roomName} />
+				  </label>
+			  </Modal.Body>
+			  <Modal.Footer>
+			  	<Button onClick={this.addRoom}>Create Room</Button>
+			  </Modal.Footer>
       </Modal>
 		);
 	}
@@ -103,8 +116,9 @@ class Lobby extends React.Component {
 		} else {
 			return(
 				<div>
-	        <button onClick={this.showRoomModal}>Create New Room</button>
+	        <Button onClick={this.showRoomModal}>Create New Room</Button>
 					{this.roomList()}
+					<ChatBox messages={this.props.messages}/>
 					{this.modals()}
 				</div>
 			);
@@ -115,5 +129,6 @@ class Lobby extends React.Component {
 export default withTracker(() => {
   return {
     rooms: Rooms.find({}).fetch(),
+    messages: Messages.find({location: 'lobby'}).fetch(),
   };
 })(Lobby);
