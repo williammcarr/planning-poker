@@ -13,27 +13,34 @@ class ChatBox extends React.Component {
  
     this.state = {
       chatMessage: '',
-      userColors: {},
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.messages !== prevState.messages) {
-      return {userColors: ChatBox.setUserColors(nextProps.messages)};
+      ChatBox.setUserColors(nextProps.messages);
     }
 
     return null;
   }
 
   static setUserColors(messages) {
-    const userColors = {};
-
+    var userColors = {};
+    var colorString, storedUserColors;
+     
     messages.forEach((message) => {
-      if (!userColors[message.userName]) {
+      storedUserColors = JSON.parse(localStorage.getItem('userColors'));
+      
+      if (storedUserColors) {
+        colorString = storedUserColors[message.userName];
+      }
+
+      if (!colorString) {
         const randInt = Math.floor(Math.random() * 360);
         const colorInt = randInt - (randInt % 10);
 
         userColors[message.userName] = `hsl(${colorInt},100%,50%)`;
+        localStorage.setItem('userColors', JSON.stringify(userColors));
       }
     });
 
@@ -67,7 +74,7 @@ class ChatBox extends React.Component {
           <Card.Header>Chat</Card.Header>
           <Card.Body>
             {this.props.messages.map((message) => (
-              <Card.Text key={message._id}><span style={{color: this.state.userColors[message.userName]}}>{message.userName}:</span> {message.text}</Card.Text>
+              <Card.Text key={message._id}><span style={{color: `${JSON.parse(localStorage.getItem('userColors'))[message.userName]}`}}>{message.userName}:</span> {message.text}</Card.Text>
             ))}
           </Card.Body>
         </Card>

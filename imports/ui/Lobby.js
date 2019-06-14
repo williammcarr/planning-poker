@@ -82,7 +82,7 @@ class Lobby extends React.Component {
 						Enter your name:
 						<input value={this.state.userName} onChange={this.updateUserName}/>
 					</label>
-					<Button>Login</Button>
+					<Button type="submit">Login</Button>
 				</form>
 			</div>
 		);
