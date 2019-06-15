@@ -50,15 +50,22 @@ class ChatBox extends React.Component {
   chatSubmit = (e) => {
     e.preventDefault();
 
-    Messages.insert({
+    let props = {
       text: this.state.chatMessage,
       location: this.props.location,
       userId: localStorage.getItem('userId'),
       userName: localStorage.getItem('userName'),
-    });
+    }
 
-    this.setState({
-      chatMessage: '',
+    Meteor.call('messages.create', props, (err) => {
+      if (err) {
+        console.error(err.reason);
+        return;
+      }
+
+      this.setState({
+        chatMessage: '',
+      });
     });
   }
 

@@ -153,6 +153,6 @@ export default withTracker((route) => {
     pointedTickets: Tickets.find({roomId: roomId, points: { $gte: 1 }}).fetch(),
     unpointedTickets: Tickets.find({roomId: roomId, points: null }).fetch(),
     room: Rooms.findOne({_id: roomId}),
-    messages: Messages.find({location: roomId}).fetch(),
+    messages: Messages.find({location: roomId}, { sort: { createdAt: 1 } }).fetch(),
   };
 })(PokerRoom);

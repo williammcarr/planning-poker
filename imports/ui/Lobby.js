@@ -126,6 +126,6 @@ class Lobby extends React.Component {
 export default withTracker(() => {
   return {
     rooms: Rooms.find({}).fetch(),
-    messages: Messages.find({location: 'lobby'}).fetch(),
+    messages: Messages.find({location: 'lobby'}, { sort: { createdAt: 1 } }).fetch(),
   };
 })(Lobby);
