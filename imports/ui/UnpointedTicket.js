@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Card from 'react-bootstrap/Card';
 
+import get from 'lodash/get';
+
 import { Tickets } from '../api/tickets.js';
 
 class UnpointedTicket extends React.Component {
@@ -26,6 +28,10 @@ class UnpointedTicket extends React.Component {
 
   render() {
     const ticket = this.props.ticket;
+    const userId = localStorage.getItem('userId');
+    // if we have voted on this ticket we need to show how many points
+    const vote = get(ticket, `userVotes.${userId}`, null);
+    const voteValues = ['1', '2', '3', '5', '8', '13'];
 
     return(
       <React.Fragment>
@@ -35,12 +41,10 @@ class UnpointedTicket extends React.Component {
           {ticket.status == 'new' && <Button onClick={this.handlePointing}>Point This Ticket</Button>}
           {ticket.status == 'active' &&
             <ButtonGroup>
-              <Button onClick={this.handleVote} value="1">1</Button>
-              <Button onClick={this.handleVote} value="2">2</Button>
-              <Button onClick={this.handleVote} value="3">3</Button>
-              <Button onClick={this.handleVote} value="5">5</Button>
-              <Button onClick={this.handleVote} value="8">8</Button>
-              <Button onClick={this.handleVote} value="13">13</Button>
+              {voteValues.map((value) => {
+                let active = { active: vote === value };
+                return <Button key={value} {...active} onClick={this.handleVote} value={value}>{value}</Button>;
+              })}
             </ButtonGroup>
           }
         </Card.Footer>
