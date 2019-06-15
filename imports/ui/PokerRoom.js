@@ -4,6 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
@@ -45,6 +46,7 @@ class PokerRoom extends React.Component {
       description: this.state.ticketDescription,
       roomId: this.props.room._id,
       points: null,
+      status: 'new',
     });
 
     this.setState({
@@ -58,25 +60,31 @@ class PokerRoom extends React.Component {
     this.setState({ showTicketModal: true });
   };
 
+  hideTicketModal = () => {
+    this.setState({ showTicketModal: false });
+  };
+
   modals() {
     return(
-      <Modal show={this.state.showTicketModal}>
-        <Modal.Header>
-          <Modal.Title>Create Ticket</Modal.Title>
-        </Modal.Header>
-        <form onSubmit={this.addTicket}>
+      <Modal show={this.state.showTicketModal} onHide={this.hideTicketModal}>
+        <Form onSubmit={this.addTicket}>
+          <Modal.Header closeButton>
+            <Modal.Title>Create Room</Modal.Title>
+          </Modal.Header>
           <Modal.Body>
-            <label>Enter Ticket Name:
-            <input type="text" onChange={this.updateTicketName} value={this.state.ticketName} />
-            </label>
-            <label>Enter Ticket description:
-            <input type="text" onChange={this.updateTicketDescription} value={this.state.ticketDescription} />
-            </label>
+            <Form.Group>
+              <Form.Label>Enter Ticket Name:</Form.Label>
+              <Form.Control type="text" onChange={this.updateTicketName} value={this.state.ticketName} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Enter Ticket Description:</Form.Label>
+              <Form.Control type="text" onChange={this.updateTicketDescription} value={this.state.ticketDescription} />
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit">Create Ticket</Button>
           </Modal.Footer>
-        </form>
+        </Form>
       </Modal>
     );
   }
@@ -102,10 +110,10 @@ class PokerRoom extends React.Component {
           <Button onClick={this.showTicketModal}>Add Ticket</Button>
           <Row>
             <Col className="xs-6">
-              <TicketList tickets={this.props.unpointedTickets} room={this.props.room} title="Unpointed Tickets"/>
+              <TicketList tickets={this.props.unpointedTickets} pointed={false}/>
             </Col>
             <Col className="xs-6">
-              <TicketList tickets={this.props.pointedTickets} room={this.props.room} title="Pointed Tickets"/>
+              <TicketList tickets={this.props.pointedTickets} pointed={true}/>
             </Col>
           </Row>
         </div>

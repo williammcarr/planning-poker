@@ -8,7 +8,7 @@ class RoomList extends React.Component {
   render() {
     return(
       <React.Fragment>
-        <Table responsive striped hover bordered className="mt-4" style={{maxHeight: '500px', width: '60%'}}>
+        <Table responsive striped hover bordered className="mt-4" style={{ maxHeight: 300, overflowY: 'scroll' }}>
           <thead><tr><td colSpan="2">Open Rooms</td></tr></thead>
           <tbody>
             {this.props.rooms.map((room) => (

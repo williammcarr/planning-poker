@@ -17,16 +17,16 @@ class ChatBox extends React.Component {
       chatMessage: '',
     };
 
-    ChatBox.setUserColors(props.messages);
+    this.setUserColors(this.props.messages);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.messages.length !== this.props.messages.length) {
-      ChatBox.setUserColors(this.props.messages);
+      this.setUserColors(this.props.messages);
     }
   }
 
-  static setUserColors(messages) {
+  setUserColors(messages) {
     let userColors = {};
 
     if (localStorage.getItem('userColors')) {

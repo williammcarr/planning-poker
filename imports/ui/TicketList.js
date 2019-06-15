@@ -8,17 +8,14 @@ import PointedTicket from './PointedTicket';
 
 class TicketList extends React.Component {
   render() {
-    const ticketComponents = {
-      "Pointed Tickets": PointedTicket,
-      "Unpointed Tickets": UnpointedTicket,
-    };
 
-    const TicketComponent = ticketComponents[this.props.title]
+    const TicketComponent = this.props.pointed ? PointedTicket : UnpointedTicket;
+    const title = this.props.pointed ? "Pointed Tickets" : "Unpointed Tickets";
 
     return(
       <React.Fragment>
         <Card className="mt-4" style={{minHeight: '300px'}}>
-          <Card.Header>{this.props.title}</Card.Header>
+          <Card.Header>{title}</Card.Header>
           <Card.Body style={{padding: '5px'}}>
             <CardColumns>
               {this.props.tickets.map((ticket) => (

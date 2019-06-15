@@ -3,6 +3,7 @@ import { Random } from 'meteor/random';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
 
@@ -24,6 +25,10 @@ class Lobby extends React.Component {
 
   showRoomModal = () => {
     this.setState({ showRoomModal: true });
+  };
+
+  hideRoomModal = () => {
+    this.setState({ showRoomModal: false });
   };
 
   updateRoomName = (e) => {
@@ -75,20 +80,21 @@ class Lobby extends React.Component {
 
 	modals() {
 		return(
-			<Modal show={this.state.showRoomModal}>
-				<Modal.Header>
-					<Modal.Title>Create Room</Modal.Title>
-				</Modal.Header>
-				<form onSubmit={this.addRoom}>
-					<Modal.Body>
-		      	<label>Enter a room name:
-					  <input type="text" onChange={this.updateRoomName} value={this.state.roomName} />
-					  </label>
-				  </Modal.Body>
-				  <Modal.Footer>
+			<Modal show={this.state.showRoomModal} onHide={this.hideRoomModal}>
+			  <Form onSubmit={this.addRoom}>
+			  	<Modal.Header closeButton>
+						<Modal.Title>Create Room</Modal.Title>
+					</Modal.Header>
+			  	<Modal.Body>
+					  <Form.Group>
+					    <Form.Label>Enter a room name:</Form.Label>
+					    <Form.Control type="text" onChange={this.updateRoomName} value={this.state.roomName} />
+					  </Form.Group>
+					</Modal.Body>
+					<Modal.Footer>
 				  	<Button type="submit">Create Room</Button>
 				  </Modal.Footer>
-			  </form>
+				</Form>
       </Modal>
 		);
 	}
@@ -102,12 +108,15 @@ class Lobby extends React.Component {
 			);
 		} else {
 			return(
-				<div>
-	        <Button onClick={this.showRoomModal}>Create New Room</Button>
-					<RoomList rooms={this.props.rooms}/>
-					<ChatBox location="lobby" messages={this.props.messages}/>
-					{this.modals()}
-				</div>
+				<React.Fragment>
+					<h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
+					<div>
+		        <Button onClick={this.showRoomModal}>Create New Room</Button>
+						<RoomList rooms={this.props.rooms}/>
+						<ChatBox location="lobby" messages={this.props.messages}/>
+						{this.modals()}
+					</div>
+				</React.Fragment>
 			);
 		}
 	}

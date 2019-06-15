@@ -1,16 +1,26 @@
 import React from 'react';
 
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Card from 'react-bootstrap/Card';
 
 import { Tickets } from '../api/tickets.js';
 
 class UnpointedTicket extends React.Component {
   handlePointing = () => {
-    const num = Math.floor(Math.random() * 10)
     Tickets.update(
       {_id: this.props.ticket._id},
-      {$set: { points: num } }
+      {$set: { status: 'active' } }
+    );
+  }
+
+  handleVote = (e) => {
+    const userId = localStorage.getItem('userId');
+    const string = `userVotes.${userId}`;
+
+    Tickets.update(
+      {_id: this.props.ticket._id},
+      {$set: { [string]: e.target.value } }
     );
   }
 
@@ -21,7 +31,18 @@ class UnpointedTicket extends React.Component {
       <React.Fragment>
         <Card.Header>{ticket.name}</Card.Header>
         <Card.Body>{ticket.description}</Card.Body>
-        <Card.Footer><Button onClick={this.handlePointing}>Point This Ticket</Button></Card.Footer>
+        <Card.Footer>
+          {ticket.status == 'new' && <Button onClick={this.handlePointing}>Point This Ticket</Button>}
+          {ticket.status == 'active' && <ButtonGroup className="mr-2">
+            <Button onClick={this.handleVote} value="1">1</Button>
+            <Button onClick={this.handleVote} value="2">2</Button>
+            <Button onClick={this.handleVote} value="3">3</Button>
+            <Button onClick={this.handleVote} value="5">5</Button>
+            <Button onClick={this.handleVote} value="8">8</Button>
+            <Button onClick={this.handleVote} value="13">13</Button>
+          </ButtonGroup>
+          }
+        </Card.Footer>
       </React.Fragment>
     );
   }
