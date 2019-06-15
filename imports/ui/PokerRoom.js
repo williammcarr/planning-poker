@@ -85,12 +85,15 @@ class PokerRoom extends React.Component {
       <Modal show={this.state.showTicketModal} onHide={this.hideTicketModal}>
         <Form onSubmit={this.addTicket}>
           <Modal.Header closeButton>
-            <Modal.Title>Create Room</Modal.Title>
+            <Modal.Title>Add Ticket</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group>
               <Form.Label>Enter Ticket Name:</Form.Label>
-              <Form.Control type="text" onChange={this.updateTicketName} value={this.state.ticketName} />
+              <Form.Control type="text" onChange={this.updateTicketName} value={this.state.ticketName} placeholder="IN-1234" />
+              <Form.Text className="text-muted">
+                Use a ticket number, this turns into a link to JIRA.
+              </Form.Text>
             </Form.Group>
             <Form.Group>
               <Form.Label>Enter Ticket Description:</Form.Label>
@@ -98,7 +101,7 @@ class PokerRoom extends React.Component {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="submit">Create Ticket</Button>
+            <Button type="submit">Add</Button>
           </Modal.Footer>
         </Form>
       </Modal>

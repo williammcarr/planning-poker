@@ -93,7 +93,7 @@ class Lobby extends React.Component {
 					  </Form.Group>
 					</Modal.Body>
 					<Modal.Footer>
-				  	<Button type="submit">Create Room</Button>
+				  	<Button type="submit">Create</Button>
 				  </Modal.Footer>
 				</Form>
       </Modal>
