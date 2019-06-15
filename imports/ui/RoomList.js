@@ -1,10 +1,26 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
 class RoomList extends React.Component {
+  handleJoinRoom = (evt) => {
+    const roomId = evt.target.value;
+    // we should get real user id username
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+
+    Meteor.call('rooms.join', { roomId, userId, userName }, (err) => {
+      if (err) {
+        console.error(err.reason);
+        return;
+      }
+
+      this.props.history.push(`/room/${roomId}`);
+    });
+  }
+
   render() {
     return(
       <React.Fragment>
@@ -14,7 +30,7 @@ class RoomList extends React.Component {
             {this.props.rooms.map((room) => (
               <tr key={room._id}>
                 <td width="100px">
-                  <Link to={`/room/${room._id}`}><Button>Join</Button></Link>
+                  <Button onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
                 </td>
                 <td>
                   {room.text}
@@ -28,4 +44,4 @@ class RoomList extends React.Component {
   }
 }
 
-export default RoomList;
+export default withRouter(RoomList);

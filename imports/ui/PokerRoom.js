@@ -64,6 +64,22 @@ class PokerRoom extends React.Component {
     this.setState({ showTicketModal: false });
   };
 
+  handleLeaveRoom = () => {
+    const roomId = this.props.room._id;
+    // we should get real user id username
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+
+    Meteor.call('rooms.leave', { roomId, userId, userName }, (err) => {
+      if (err) {
+        console.error(err.reason);
+        return;
+      }
+
+      this.props.history.replace("/");
+    });
+  }
+
   modals() {
     return(
       <Modal show={this.state.showTicketModal} onHide={this.hideTicketModal}>
@@ -104,7 +120,7 @@ class PokerRoom extends React.Component {
 
     return(
       <div>
-        <Link to="/"><Button>Return to Lobby</Button></Link>
+        <Button onClick={this.handleLeaveRoom} variant="light">Return to Lobby</Button>
         <h3 style={{textAlign: 'center'}}>{this.props.room.text}</h3>
         <div>
           <Button onClick={this.showTicketModal}>Add Ticket</Button>

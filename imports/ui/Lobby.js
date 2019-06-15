@@ -15,7 +15,7 @@ import { Rooms } from '../api/rooms.js';
 class Lobby extends React.Component {
 	constructor(props) {
     super(props);
- 
+
     this.state = {
     	roomName: '',
     	userName: '',
@@ -45,13 +45,14 @@ class Lobby extends React.Component {
 
 	addRoom = (e) => {
 		e.preventDefault();
- 
+
     Rooms.insert({
-    	text: this.state.roomName, 
-    	userId: localStorage.getItem('userId'), 
+    	text: this.state.roomName,
+    	userId: localStorage.getItem('userId'),
     	userName: localStorage.getItem('userName'),
+      voters: [],
     });
- 
+
     this.setState({
   		roomName: '',
   		showRoomModal: false,
