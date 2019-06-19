@@ -67,10 +67,10 @@ class PokerRoom extends React.Component {
   handleLeaveRoom = () => {
     const roomId = this.props.room._id;
     // we should get real user id username
-    const userId = localStorage.getItem('userId');
-    const userName = localStorage.getItem('userName');
+    const userId = Meteor.user()._id;
+    const username = Meteor.user().username;
 
-    Meteor.call('rooms.leave', { roomId, userId, userName }, (err) => {
+    Meteor.call('rooms.leave', { roomId, userId, username }, (err) => {
       if (err) {
         console.error(err.reason);
         return;
@@ -109,10 +109,10 @@ class PokerRoom extends React.Component {
   }
 
   render() {
-    const loggedIn = localStorage.getItem('userId') !== null;
+    const loggedIn = Meteor.userId();
 
     if (!loggedIn) {
-        this.props.history.push('/');
+      this.props.history.push('/');
     }
 
     if(this.props.room == null || this.props.tickets == null) {

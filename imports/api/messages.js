@@ -4,12 +4,12 @@ import moment from 'moment';
 export const Messages = new Mongo.Collection('messages');
 
 Meteor.methods({
-  'messages.create'({ text, location, userId, userName }) {
+  'messages.create'({ text, location, userId, username }) {
     Messages.insert({
       text,
       location,
       userId,
-      userName,
+      username,
       createdAt: moment().unix(),
     });
   },

@@ -53,8 +53,8 @@ class ChatBox extends React.Component {
     let props = {
       text: this.state.chatMessage,
       location: this.props.location,
-      userId: localStorage.getItem('userId'),
-      userName: localStorage.getItem('userName'),
+      userId: Meteor.user()._id,
+      username: Meteor.user().username,
     }
 
     Meteor.call('messages.create', props, (err) => {
@@ -84,7 +84,7 @@ class ChatBox extends React.Component {
           <Card.Header>Chat</Card.Header>
           <Card.Body style={{ maxHeight: 300, overflowY: 'scroll' }}>
             {this.props.messages.map((message) => (
-              <Card.Text key={message._id}><span style={{color: `${userColors[message.userId]}`}}>{message.userName}:</span> {message.text}</Card.Text>
+              <Card.Text key={message._id}><span style={{color: `${userColors[message.userId]}`}}>{message.username}:</span> {message.text}</Card.Text>
             ))}
           </Card.Body>
         </Card>

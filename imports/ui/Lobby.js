@@ -1,11 +1,10 @@
 import React from 'react';
-import { Random } from 'meteor/random';
+import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import Table from 'react-bootstrap/Table';
 
 import ChatBox from './ChatBox';
 import RoomList from './RoomList';
@@ -18,7 +17,6 @@ class Lobby extends React.Component {
 
     this.state = {
     	roomName: '',
-    	userName: '',
     	showRoomModal: false,
     };
   }
@@ -37,19 +35,13 @@ class Lobby extends React.Component {
   	});
   }
 
-  updateUserName = (e) => {
-  	this.setState({
-  		userName: e.target.value,
-  	});
-  }
-
 	addRoom = (e) => {
 		e.preventDefault();
 
     Rooms.insert({
     	text: this.state.roomName,
-    	userId: localStorage.getItem('userId'),
-    	userName: localStorage.getItem('userName'),
+    	userId: Meteor.user()._id,
+    	username: Meteor.user().username,
       voters: [],
     });
 
@@ -59,27 +51,7 @@ class Lobby extends React.Component {
   	});
 	}
 
-	handleLogin = () => {
-		localStorage.setItem('userId', Random.id());
-		localStorage.setItem('userName', this.state.userName);
-	}
-
-	login() {
-		return(
-			<div>
-				<h1>Planning Poker!</h1>
-				<form onSubmit={this.handleLogin}>
-					<label>
-						Enter your name:
-						<input value={this.state.userName} onChange={this.updateUserName}/>
-					</label>
-					<Button type="submit">Login</Button>
-				</form>
-			</div>
-		);
-	}
-
-	modals() {
+	roomModal() {
 		return(
 			<Modal show={this.state.showRoomModal} onHide={this.hideRoomModal}>
 			  <Form onSubmit={this.addRoom}>
@@ -101,12 +73,8 @@ class Lobby extends React.Component {
 	}
 
 	render() {
-		const loggedIn = localStorage.getItem('userId') !== null;
-
-		if (!loggedIn) {
-			return(
-				this.login()
-			);
+		if (!Meteor.userId()) {
+			return <Redirect to="/login"/>;
 		} else {
 			return(
 				<React.Fragment>
@@ -115,7 +83,7 @@ class Lobby extends React.Component {
 		        <Button onClick={this.showRoomModal}>Create New Room</Button>
 						<RoomList rooms={this.props.rooms}/>
 						<ChatBox location="lobby" messages={this.props.messages}/>
-						{this.modals()}
+						{this.roomModal()}
 					</div>
 				</React.Fragment>
 			);

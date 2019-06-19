@@ -17,7 +17,7 @@ class UnpointedTicket extends React.Component {
   }
 
   handleVote = (e) => {
-    const userId = localStorage.getItem('userId');
+    const userId = Meteor.user()._id;
     const string = `userVotes.${userId}`;
 
     Tickets.update(

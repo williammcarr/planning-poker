@@ -11,13 +11,13 @@ voters    // participants       [String]
 **/
 
 Meteor.methods({
-  'rooms.join'({ roomId, userId, userName }) {
+  'rooms.join'({ roomId, userId, username }) {
     // maybe use userId someday
-    Rooms.update({ _id: roomId }, { $push: { voters: userName } });
+    Rooms.update({ _id: roomId }, { $push: { voters: username } });
   },
-  'rooms.leave'({ roomId, userId, userName }) {
+  'rooms.leave'({ roomId, userId, username }) {
     const room = Rooms.findOne({ _id: roomId });
-    let voters = reject(room.voters, (voterName) => (voterName == userName));
+    let voters = reject(room.voters, (voterName) => (voterName == username));
     // maybe use userId someday
     Rooms.update({ _id: roomId }, { $set: { voters } });
   },
