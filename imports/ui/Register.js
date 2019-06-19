@@ -1,8 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
 class Register extends React.Component {
   constructor(props) {
@@ -38,24 +42,35 @@ class Register extends React.Component {
 
   register() {
     return(
-      <div>
-        <Form onSubmit={this.handleRegistration}>
-          <label>
-            Username:
-            <input name="username"/>
-          </label>
-          <label>
-            Password:
-            <input type="password" name="password"/>
-          </label>
-          <label>
-            Re-enter password:
-            <input type="password" name="matchPassword"/>
-          </label>
-          {this.state.errors != '' && <label>{this.state.errors}</label>}
-          <Button type="submit">Register</Button>
-        </Form>
-      </div>
+      <React.Fragment>
+        <Row>
+          <Col xs={{ span: 4, offset: 4 }}>
+            <h3 style={{textAlign: 'center'}}>Create an Account</h3>
+            <Card>
+              <Card.Body>
+                <Form onSubmit={this.handleRegistration}>
+                  <Form.Group>
+                    <Form.Label>Username:</Form.Label>
+                    <Form.Control type="input" name="username"></Form.Control>
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Password:</Form.Label>
+                    <Form.Control type="password" name="password"></Form.Control>
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Re-enter password:</Form.Label>
+                    <Form.Control type="password" name="matchPassword"></Form.Control>
+                    {this.state.errors != '' && <Alert variant="danger">{this.state.errors}</Alert>}
+                  </Form.Group>
+                  <div style={{textAlign: 'center'}}>
+                    <Button type="submit">Register</Button>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </React.Fragment>
     );
   }
 
