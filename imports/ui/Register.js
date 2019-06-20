@@ -35,7 +35,14 @@ class Register extends React.Component {
           return;
         }
 
-        this.props.history.replace("/login");
+        Meteor.loginWithPassword(username, password, (err) => {
+          if (err) {
+            console.error(err.reason);
+            return;
+          }
+
+          this.props.history.replace("/");
+        });
       });
     }
   }
