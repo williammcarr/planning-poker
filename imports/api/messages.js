@@ -3,6 +3,10 @@ import moment from 'moment';
 
 export const Messages = new Mongo.Collection('messages');
 
+if (Meteor.isServer) {
+  Meteor.publish('messages', (location) => Messages.find({ location }));
+}
+
 Meteor.methods({
   'messages.create'({ text, location, userId, username }) {
     Messages.insert({

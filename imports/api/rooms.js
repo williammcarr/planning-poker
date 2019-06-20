@@ -10,6 +10,10 @@ voters    // participants       [String]
 
 **/
 
+if (Meteor.isServer) {
+  Meteor.publish('rooms.all', () => Rooms.find());
+}
+
 Meteor.methods({
   'rooms.join'({ roomId, userId, username }) {
     // maybe use userId someday

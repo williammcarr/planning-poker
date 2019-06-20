@@ -75,7 +75,9 @@ class Lobby extends React.Component {
 	render() {
 		if (!Meteor.userId()) {
 			return <Redirect to="/login"/>;
-		} else {
+		} else if (this.props.loading) {
+      return <p>Loading...</p>;
+    } else {
 			return(
 				<React.Fragment>
 					<h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
@@ -92,8 +94,21 @@ class Lobby extends React.Component {
 }
 
 export default withTracker(() => {
+  const roomHandle = Meteor.subscribe('rooms.all');
+  const messagesHandle = Meteor.subscribe('messages', 'lobby');
+  const loading = !roomHandle.ready() || !messagesHandle.ready();
+
+  let messages = [];
+  let rooms = [];
+
+  if (!loading) {
+    messages = Messages.find({location: 'lobby'}, { sort: { createdAt: 1 } }).fetch();
+    rooms = Rooms.find({}).fetch();
+  }
+
   return {
-    rooms: Rooms.find({}).fetch(),
-    messages: Messages.find({location: 'lobby'}, { sort: { createdAt: 1 } }).fetch(),
+    loading,
+    messages,
+    rooms,
   };
 })(Lobby);
