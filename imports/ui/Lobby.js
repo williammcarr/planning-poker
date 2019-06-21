@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
@@ -74,22 +73,25 @@ class Lobby extends React.Component {
 
 	render() {
 		if (!Meteor.userId()) {
-			return <Redirect to="/login"/>;
+      this.props.history.push('/');
+      return;
 		} else if (this.props.loading) {
       return <p>Loading...</p>;
-    } else {
-			return(
-				<React.Fragment>
-					<h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
-					<div>
-		        <Button onClick={this.showRoomModal}>Create New Room</Button>
-						<RoomList rooms={this.props.rooms}/>
-						<ChatBox location="lobby" messages={this.props.messages}/>
-						{this.roomModal()}
-					</div>
-				</React.Fragment>
-			);
-		}
+    }
+
+    const { messages, rooms } = this.props;
+
+		return (
+			<React.Fragment>
+				<h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
+				<div>
+	        <Button onClick={this.showRoomModal}>Create New Room</Button>
+					<RoomList rooms={rooms}/>
+					<ChatBox location="lobby" messages={messages}/>
+					{this.roomModal()}
+				</div>
+			</React.Fragment>
+		);
 	}
 }
 
