@@ -12,6 +12,7 @@ voters    // participants       [String]
 
 if (Meteor.isServer) {
   Meteor.publish('rooms.all', () => Rooms.find());
+  Meteor.publish('room', (roomId) => Rooms.find({ _id: roomId }));
 }
 
 Meteor.methods({

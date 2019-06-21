@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { withTracker } from 'meteor/react-meteor-data';
 
+import partition from 'lodash/partition';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -41,18 +42,23 @@ class PokerRoom extends React.Component {
   addTicket = (e) => {
     e.preventDefault();
 
-    Tickets.insert({
+    const params = {
       name: this.state.ticketName,
       description: this.state.ticketDescription,
       roomId: this.props.room._id,
-      points: null,
-      status: 'new',
-    });
+    };
 
-    this.setState({
-      ticketName: '',
-      ticketDescription: '',
-      showTicketModal: false,
+    Meteor.call('tickets.insert', params, (err) => {
+      if (err) {
+        console.error(err.reason);
+        return;
+      }
+
+      this.setState({
+        ticketName: '',
+        ticketDescription: '',
+        showTicketModal: false,
+      });
     });
   }
 
@@ -66,7 +72,6 @@ class PokerRoom extends React.Component {
 
   handleLeaveRoom = () => {
     const roomId = this.props.room._id;
-    // we should get real user id username
     const userId = Meteor.user()._id;
     const username = Meteor.user().username;
 
@@ -109,35 +114,32 @@ class PokerRoom extends React.Component {
   }
 
   render() {
-    const loggedIn = Meteor.userId();
-
-    if (!loggedIn) {
-      this.props.history.push('/');
+    if (!Meteor.userId()) {
+      this.props.history.push('/login');
+      return;
+    } else if (this.props.loading) {
+      return <p>Loading...</p>;
     }
 
-    if(this.props.room == null || this.props.tickets == null) {
-      return (
-        <p>Loading...</p>
-      );
-    }
+    const { room, messages, pointedTickets, unpointedTickets } = this.props;
 
-    return(
+    return (
       <div>
         <Button onClick={this.handleLeaveRoom} variant="light">Return to Lobby</Button>
-        <h3 style={{textAlign: 'center'}}>{this.props.room.text}</h3>
+        <h3 style={{textAlign: 'center'}}>{room.text}</h3>
         <div>
           <Button onClick={this.showTicketModal}>Add Ticket</Button>
           <Row>
             <Col className="xs-6">
-              <TicketList tickets={this.props.unpointedTickets} pointed={false}/>
+              <TicketList tickets={unpointedTickets} pointed={false}/>
             </Col>
             <Col className="xs-6">
-              <TicketList tickets={this.props.pointedTickets} pointed={true}/>
+              <TicketList tickets={pointedTickets} pointed={true}/>
             </Col>
           </Row>
         </div>
         <div>
-          <ChatBox location={this.props.room._id} messages={this.props.messages}/>
+          <ChatBox location={room._id} messages={messages}/>
         </div>
         {this.modals()}
       </div>
@@ -147,12 +149,31 @@ class PokerRoom extends React.Component {
 
 export default withTracker((route) => {
   const roomId = route.match.params.id;
+  const messagesHandle = Meteor.subscribe('messages', roomId);
+  const roomHandle = Meteor.subscribe('room', roomId);
+  const ticketsHandle = Meteor.subscribe('tickets', roomId);
+  const loading = !ticketsHandle.ready() || !messagesHandle.ready() || !roomHandle.ready();
+
+  let messages = [];
+  let pointedTickets = [];
+  let room = {};
+  let unpointedTickets = [];
+
+  if (!loading) {
+    let tickets = Tickets.find({ roomId }).fetch();
+    let partitionedTickets = partition(tickets, (ticket) => ticket.points >= 1);
+    pointedTickets = partitionedTickets[0];
+    unpointedTickets = partitionedTickets[1];
+
+    room = Rooms.findOne(roomId);
+    messages = Messages.find({ location: roomId }, { sort: { createdAt: 1 } }).fetch();
+  }
 
   return {
-    tickets: Tickets.find({roomId}).fetch(),
-    pointedTickets: Tickets.find({roomId: roomId, points: { $gte: 1 }}).fetch(),
-    unpointedTickets: Tickets.find({roomId: roomId, points: null }).fetch(),
-    room: Rooms.findOne({_id: roomId}),
-    messages: Messages.find({location: roomId}, { sort: { createdAt: 1 } }).fetch(),
+    loading,
+    messages,
+    pointedTickets,
+    room,
+    unpointedTickets,
   };
 })(PokerRoom);
