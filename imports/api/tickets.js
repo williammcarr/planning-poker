@@ -19,6 +19,7 @@ Meteor.methods({
       points: null,
       roomId,
       status: 'new',
+      userVotes: {},
     });
   },
 });

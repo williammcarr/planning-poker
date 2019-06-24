@@ -28,7 +28,7 @@ class UnpointedTicket extends React.Component {
 
   render() {
     const ticket = this.props.ticket;
-    const userId = localStorage.getItem('userId');
+    const userId = Meteor.user()._id;
     // if we have voted on this ticket we need to show how many points
     const vote = get(ticket, `userVotes.${userId}`, null);
     const voteValues = ['1', '2', '3', '5', '8', '13'];
