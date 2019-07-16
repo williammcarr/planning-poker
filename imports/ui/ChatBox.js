@@ -50,6 +50,8 @@ class ChatBox extends React.Component {
   chatSubmit = (e) => {
     e.preventDefault();
 
+    if (this.state.chatMessage === '') return;
+
     let props = {
       text: this.state.chatMessage,
       location: this.props.location,
