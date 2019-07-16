@@ -19,12 +19,16 @@ class RoomList extends React.Component {
   }
 
   render() {
+    const { rooms } = this.props;
+
+    if (!rooms) return null;
+
     return(
       <React.Fragment>
         <Table responsive striped hover bordered className="mt-4" style={{ maxHeight: 300, overflowY: 'scroll' }}>
           <thead><tr><td colSpan="2">Open Rooms</td></tr></thead>
           <tbody>
-            {this.props.rooms.map((room) => (
+            {rooms.map((room) => (
               <tr key={room._id}>
                 <td width="100px">
                   <Button onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>

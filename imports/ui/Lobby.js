@@ -11,12 +11,11 @@ import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
 
 class Lobby extends React.Component {
-	constructor(props) {
+  constructor(props) {
     super(props);
 
     this.state = {
-    	roomName: '',
-    	showRoomModal: false,
+      showRoomModal: false,
     };
   }
 
@@ -43,49 +42,53 @@ class Lobby extends React.Component {
     });
   }
 
-	roomModal() {
-		return(
-			<Modal show={this.state.showRoomModal} onHide={this.hideRoomModal}>
-			  <Form onSubmit={this.addRoom}>
-			  	<Modal.Header closeButton>
-						<Modal.Title>Create Room</Modal.Title>
-					</Modal.Header>
-			  	<Modal.Body>
-					  <Form.Group>
-					    <Form.Label>Enter a room name:</Form.Label>
-					    <Form.Control type="text" onChange={this.updateRoomName} value={this.state.roomName} />
-					  </Form.Group>
-					</Modal.Body>
-					<Modal.Footer>
-				  	<Button type="submit">Create</Button>
-				  </Modal.Footer>
-				</Form>
+  roomModal() {
+    return(
+      <Modal show={this.state.showRoomModal} onHide={this.hideRoomModal}>
+        <Form onSubmit={this.addRoom}>
+          <Modal.Header closeButton>
+            <Modal.Title>Create Room</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group>
+              <Form.Label>Enter a room name:</Form.Label>
+              <Form.Control type="text" name="roomname" />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit">Create</Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
-		);
-	}
+    );
+  }
 
-	render() {
-		if (!Meteor.userId()) {
-      this.props.history.push('/');
-      return;
-		} else if (this.props.loading) {
+  logout = () => {
+    Meteor.logout(() => {
+      this.props.history.replace('/')
+    });
+  }
+
+  render() {
+    if (this.props.loading) {
       return <p>Loading...</p>;
     }
 
     const { messages, rooms } = this.props;
 
-		return (
-			<React.Fragment>
-				<h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
-				<div>
-	        <Button onClick={this.showRoomModal}>Create New Room</Button>
-					<RoomList rooms={rooms}/>
-					<ChatBox location="lobby" messages={messages}/>
-					{this.roomModal()}
-				</div>
-			</React.Fragment>
-		);
-	}
+    return (
+      <React.Fragment>
+        <h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
+        <div>
+          <Button onClick={this.showRoomModal}>Create New Room</Button>
+          <Button style={{margin:10}}onClick={this.logout}>logout</Button>
+          <RoomList rooms={rooms}/>
+          <ChatBox location="lobby" messages={messages}/>
+          {this.roomModal()}
+        </div>
+      </React.Fragment>
+    );
+  }
 }
 
 export default withTracker(() => {
