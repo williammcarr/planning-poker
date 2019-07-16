@@ -28,27 +28,20 @@ class Lobby extends React.Component {
     this.setState({ showRoomModal: false });
   };
 
-  updateRoomName = (e) => {
-  	this.setState({
-  		roomName: e.target.value,
-  	});
-  }
+  addRoom = (e) => {
+    e.preventDefault();
 
-	addRoom = (e) => {
-		e.preventDefault();
+    const text = e.target.roomname.value;
 
-    Rooms.insert({
-    	text: this.state.roomName,
-    	userId: Meteor.user()._id,
-    	username: Meteor.user().username,
-      voters: [],
+    Meteor.call('rooms.insert', text, (err, id) => {
+      if (err) {
+        console.error(err.reason);
+        return;
+      }
+
+      this.props.history.push(`/room/${id}`);
     });
-
-    this.setState({
-  		roomName: '',
-  		showRoomModal: false,
-  	});
-	}
+  }
 
 	roomModal() {
 		return(

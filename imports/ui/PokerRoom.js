@@ -72,10 +72,8 @@ class PokerRoom extends React.Component {
 
   handleLeaveRoom = () => {
     const roomId = this.props.room._id;
-    const userId = Meteor.user()._id;
-    const username = Meteor.user().username;
 
-    Meteor.call('rooms.leave', { roomId, userId, username }, (err) => {
+    Meteor.call('rooms.leave', { roomId }, (err) => {
       if (err) {
         console.error(err.reason);
         return;

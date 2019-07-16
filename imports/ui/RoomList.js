@@ -7,11 +7,8 @@ import Table from 'react-bootstrap/Table';
 class RoomList extends React.Component {
   handleJoinRoom = (e) => {
     const roomId = e.target.value;
-    // we should get real user id username
-    const userId = Meteor.user()._id;
-    const username = Meteor.user().username;
 
-    Meteor.call('rooms.join', { roomId, userId, username }, (err) => {
+    Meteor.call('rooms.join', { roomId }, (err) => {
       if (err) {
         console.error(err.reason);
         return;
