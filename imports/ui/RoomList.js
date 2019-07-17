@@ -2,7 +2,10 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 
 import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
+import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 
 class RoomList extends React.Component {
   handleJoinRoom = (e) => {
@@ -25,21 +28,23 @@ class RoomList extends React.Component {
 
     return(
       <React.Fragment>
-        <Table responsive striped hover bordered className="mt-4" style={{ maxHeight: 300, overflowY: 'scroll' }}>
-          <thead><tr><td colSpan="2">Open Rooms</td></tr></thead>
-          <tbody>
+        <Card>
+          <Card.Header>Rooms</Card.Header>
+          <Card.Body style={{padding: '7px', height: 300, overflowY: 'scroll'}}>
             {rooms.map((room) => (
-              <tr key={room._id}>
-                <td width="100px">
-                  <Button onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
-                </td>
-                <td>
-                  {room.text}
-                </td>
-              </tr>
+              <Container key={room._id} style={{height: '31px', margin: '7px'}}>
+                <Row className="justify-content-xs-center self-align-center">
+                  <Col xs="auto">
+                    <Button style={{marginTop: 'auto', marginBottom: 'auto'}} onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
+                  </Col>
+                  <Col style={{paddingLeft: '0'}}>
+                    {room.text}
+                  </Col>
+                </Row>
+              </Container>
             ))}
-          </tbody>
-        </Table>
+          </Card.Body>
+        </Card>
       </React.Fragment>
     );
   }

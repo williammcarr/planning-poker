@@ -26,7 +26,7 @@ class Register extends React.Component {
 
     if (password != matchPassword) {
       this.setState({
-        errors: "Your password does not match!",
+        errors: "Password does not match.",
       });
     } else {
       Meteor.call('users.register', { username, password }, (err) => {
@@ -67,7 +67,7 @@ class Register extends React.Component {
                   <Form.Group>
                     <Form.Label>Re-enter password:</Form.Label>
                     <Form.Control type="password" name="matchPassword"></Form.Control>
-                    {this.state.errors != '' && <Alert variant="danger">{this.state.errors}</Alert>}
+                    {this.state.errors != '' && <Alert style={{marginTop: '5px'}} variant="danger">{this.state.errors}</Alert>}
                   </Form.Group>
                   <Row>
                     <Col xs={12}>
@@ -85,14 +85,12 @@ class Register extends React.Component {
   }
 
   render() {
-    if (Meteor.userId()) {
+    const loggedIn = Meteor.userId();
+
+    if (loggedIn) {
       return <Redirect to="/"/>;
     } else {
-      return (
-        <div>
-          {this.register()}
-        </div>
-      );
+      return this.register();
     }
   }
 }

@@ -8,7 +8,6 @@ import PointedTicket from './PointedTicket';
 
 class TicketList extends React.Component {
   render() {
-
     const TicketComponent = this.props.pointed ? PointedTicket : UnpointedTicket;
     const title = this.props.pointed ? "Pointed Tickets" : "Unpointed Tickets";
 

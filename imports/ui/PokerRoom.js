@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import partition from 'lodash/partition';
@@ -83,7 +84,7 @@ class PokerRoom extends React.Component {
     });
   }
 
-  modals() {
+  ticketModal() {
     return(
       <Modal show={this.state.showTicketModal} onHide={this.hideTicketModal}>
         <Form onSubmit={this.addTicket}>
@@ -128,10 +129,10 @@ class PokerRoom extends React.Component {
         <div>
           <Button onClick={this.showTicketModal}>Add Ticket</Button>
           <Row>
-            <Col className="xs-6">
+            <Col xs={6}>
               <TicketList tickets={unpointedTickets} pointed={false}/>
             </Col>
-            <Col className="xs-6">
+            <Col xs={6}>
               <TicketList tickets={pointedTickets} pointed={true}/>
             </Col>
           </Row>
@@ -139,7 +140,7 @@ class PokerRoom extends React.Component {
         <div>
           <ChatBox location={room._id} messages={messages}/>
         </div>
-        {this.modals()}
+        {this.ticketModal()}
       </div>
     );
   }

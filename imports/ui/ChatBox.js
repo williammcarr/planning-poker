@@ -2,6 +2,7 @@ import React from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 
@@ -84,20 +85,20 @@ class ChatBox extends React.Component {
       <React.Fragment>
         <Card className="mt-4">
           <Card.Header>Chat</Card.Header>
-          <Card.Body style={{ maxHeight: 300, overflowY: 'scroll' }}>
+          <Card.Body style={{ height: 300, overflowY: 'scroll' }}>
             {this.props.messages.map((message) => (
               <Card.Text key={message._id}><span style={{color: `${userColors[message.userId]}`}}>{message.username}:</span> {message.text}</Card.Text>
             ))}
           </Card.Body>
         </Card>
-        <form onSubmit={this.chatSubmit}>
+        <Form onSubmit={this.chatSubmit}>
           <InputGroup className="mb-3">
             <InputGroup.Prepend>
               <Button type="submit" variant="outline-secondary">Send</Button>
             </InputGroup.Prepend>
             <FormControl aria-describedby="basic-addon1" onChange={this.updateChat} value={this.state.chatMessage}/>
           </InputGroup>
-        </form>
+        </Form>
       </React.Fragment>
     );
   }
