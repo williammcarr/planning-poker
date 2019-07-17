@@ -5,30 +5,32 @@ import Lobby from './Lobby';
 import Login from './Login';
 import PokerRoom from './PokerRoom';
 import Register from './Register';
+import NotFoundPage from './NotFoundPage';
+import PageHeader from './PageHeader';
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Redirect, BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+const PrivateRoute = (props) => {
+  const { loggedIn, location, ...rest } = props;
+
+  if (!loggedIn) return <Redirect to={{ pathname: '/login', state: { from: location } }} />;
+  return <Route {...rest} />;
+}
 
 class App extends React.Component {
   render() {
-    const { loggedIn } = this.props;
-
-    if (loggedIn) {
-      return (
-        <Router>
-          <div>
-            <Route path="/" exact component={Lobby}/>
-            <Route path="/room/:id" component={PokerRoom}/>
-          </div>
-        </Router>
-      );
-    }
-
     return (
       <Router>
         <div>
-          <Route path="/" exact component={Login}/>
-          <Route path="/login" exact component={Login}/>
-          <Route path="/register" exact component={Register}/>
+          <PageHeader />
+          <Switch>
+            <Route path="/" exact render={() => <Redirect to="/login" />} />
+            <Route path="/login" exact component={Login}/>
+            <Route path="/register" exact component={Register}/>
+            <PrivateRoute loggedIn={this.props.loggedIn} path="/lobby" component={Lobby}/>
+            <PrivateRoute loggedIn={this.props.loggedIn} path="/room/:id" component={PokerRoom}/>
+            <Route path="*" component={NotFoundPage} />
+          </Switch>
         </div>
       </Router>
     );
