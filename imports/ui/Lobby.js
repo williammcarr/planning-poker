@@ -2,6 +2,7 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
@@ -43,7 +44,7 @@ class Lobby extends React.Component {
   }
 
   roomModal() {
-    return(
+    return (
       <Modal show={this.state.showRoomModal} onHide={this.hideRoomModal}>
         <Form onSubmit={this.addRoom}>
           <Modal.Header closeButton>
@@ -64,8 +65,10 @@ class Lobby extends React.Component {
   }
 
   logout = () => {
-    Meteor.logout(() => {
-      this.props.history.replace('/')
+    Meteor.logout((err) => {
+      if (err) console.error(err);
+
+      this.props.history.replace('/login');
     });
   }
 
@@ -77,16 +80,15 @@ class Lobby extends React.Component {
     const { messages, rooms } = this.props;
 
     return (
-      <React.Fragment>
-        <h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
+      <Container fluid>
         <div>
           <Button onClick={this.showRoomModal}>Create New Room</Button>
-          <Button style={{margin:10}}onClick={this.logout}>logout</Button>
+          <Button variant="light" style={{ margin: 10 }} onClick={this.logout}>Logout</Button>
           <RoomList rooms={rooms}/>
           <ChatBox location="lobby" messages={messages}/>
           {this.roomModal()}
         </div>
-      </React.Fragment>
+      </Container>
     );
   }
 }

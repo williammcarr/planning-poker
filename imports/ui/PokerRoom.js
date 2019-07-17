@@ -79,7 +79,7 @@ class PokerRoom extends React.Component {
         return;
       }
 
-      this.props.history.replace("/");
+      this.props.history.replace("/lobby");
     });
   }
 

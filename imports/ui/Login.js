@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -20,25 +21,36 @@ class Login extends React.Component {
   handleLogin = (e) => {
     e.preventDefault();
 
-    Meteor.loginWithPassword(e.target.username.value, e.target.password.value, (err) => {
+    const { username, password } = e.target;
+
+    if (username.value == '' || password.value == '') {
+      this.setState({
+        errors: 'please enter your username and password',
+      });
+      return;
+    }
+
+    Meteor.loginWithPassword(username.value, password.value, (err) => {
       if (err) {
         console.error(err.reason);
+        this.setState({
+          errors: err.reason,
+        });
         return;
       }
 
-      // Sean: Why does this work but <Redirect to=""> doesnt?
-      this.props.history.replace("/");
+      this.props.history.replace("/lobby");
     });
   }
 
-  login() {
-    return(
-      <React.Fragment>
-        <h1 style={{textAlign: 'center'}}>Welcome to Planning Poker!</h1>
-        <Row style={{marginTop: '100px'}}>
+  render() {
+    return (
+      <Container>
+        <Row style={{marginTop: 20}}>
           <Col xs={{ span: 4, offset: 4 }}>
             <Card>
               <Card.Body>
+              {this.state.errors && <p>{this.state.errors}</p>}
                 <Form onSubmit={this.handleLogin}>
                   <Form.Group>
                     <Form.Label>Username:</Form.Label>
@@ -49,13 +61,9 @@ class Login extends React.Component {
                     <Form.Control type="password" name="password"></Form.Control>
                   </Form.Group>
                   <Row>
-                    <Col xs>
+                    <Col xs={12}>
                       <Button type="submit">Login</Button>
-                    </Col>
-                    <Col xs>
-                      <div style={{textAlign: 'right'}}>
-                        <Link to="/register"><Button>Register</Button></Link>
-                      </div>
+                      <Link className="btn btn-light float-right" to="/register">Register</Link>
                     </Col>
                   </Row>
                 </Form>
@@ -63,21 +71,8 @@ class Login extends React.Component {
             </Card>
           </Col>
         </Row>
-      </React.Fragment>
+      </Container>
     );
-  }
-
-  render() {
-    // Sean: why do I have to wrap this.login in a <div> element?
-    if (Meteor.userId()) {
-      return <Redirect to="/"/>;
-    } else {
-      return (
-        <div>
-          {this.login()}
-        </div>
-      );
-    }
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -52,7 +52,7 @@ class Register extends React.Component {
       <React.Fragment>
         <Row>
           <Col xs={{ span: 4, offset: 4 }}>
-            <h3 style={{textAlign: 'center'}}>Create an Account</h3>
+            <h4 style={{textAlign: 'center'}}>Create an Account</h4>
             <Card>
               <Card.Body>
                 <Form onSubmit={this.handleRegistration}>
@@ -69,9 +69,12 @@ class Register extends React.Component {
                     <Form.Control type="password" name="matchPassword"></Form.Control>
                     {this.state.errors != '' && <Alert variant="danger">{this.state.errors}</Alert>}
                   </Form.Group>
-                  <div style={{textAlign: 'center'}}>
-                    <Button type="submit">Register</Button>
-                  </div>
+                  <Row>
+                    <Col xs={12}>
+                      <Button type="submit">Register</Button>
+                      <Link className="btn btn-light float-right" to="/login">Login</Link>
+                    </Col>
+                  </Row>
                 </Form>
               </Card.Body>
             </Card>
