@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
@@ -50,7 +51,7 @@ class Login extends React.Component {
           <Col xs={{ span: 4, offset: 4 }}>
             <Card>
               <Card.Body>
-              {this.state.errors && <p>{this.state.errors}</p>}
+                {this.state.errors != '' && <Alert style={{marginTop: '5px'}} variant="danger">{this.state.errors}</Alert>}
                 <Form onSubmit={this.handleLogin}>
                   <Form.Group>
                     <Form.Label>Username:</Form.Label>

@@ -47,7 +47,7 @@ class Register extends React.Component {
     }
   }
 
-  register() {
+  render() {
     return(
       <React.Fragment>
         <Row>
@@ -82,16 +82,6 @@ class Register extends React.Component {
         </Row>
       </React.Fragment>
     );
-  }
-
-  render() {
-    const loggedIn = Meteor.userId();
-
-    if (loggedIn) {
-      return <Redirect to="/"/>;
-    } else {
-      return this.register();
-    }
   }
 }
 
