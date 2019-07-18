@@ -103,7 +103,7 @@ export default withTracker(() => {
 
   if (!loading) {
     messages = Messages.find({location: 'lobby'}, { sort: { createdAt: 1 } }).fetch();
-    rooms = Rooms.find({}).fetch();
+    rooms = Rooms.find({}, { sort: { createdAt: -1 } }).fetch();
   }
 
   return {

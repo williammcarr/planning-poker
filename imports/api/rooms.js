@@ -1,5 +1,8 @@
 import { Mongo } from 'meteor/mongo';
+
+import moment from 'moment';
 import reject from 'lodash/reject';
+
 export const Rooms = new Mongo.Collection('rooms');
 /**
 
@@ -23,18 +26,19 @@ Meteor.methods({
       text,
       userId: user._id,
       username: user.username,
-      voters: [],
+      voters: [user._id],
+      createdAt: moment().unix(),
     });
   },
   'rooms.join'({ roomId }) {
     // maybe use userId someday
     const user = Meteor.user();
-    Rooms.update({ _id: roomId }, { $push: { voters: user.username } });
+    Rooms.update({ _id: roomId }, { $push: { voters: user._id } });
   },
   'rooms.leave'({ roomId }) {
     const room = Rooms.findOne({ _id: roomId });
     const user = Meteor.user();
-    const voters = reject(room.voters, (voterName) => (voterName === user.username));
+    const voters = reject(room.voters, (voterId) => (voterId === user._id));
     // maybe use userId someday
     Rooms.update({ _id: roomId }, { $set: { voters } });
   },

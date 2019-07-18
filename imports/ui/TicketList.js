@@ -10,7 +10,7 @@ class TicketList extends React.Component {
   render() {
     const TicketComponent = this.props.pointed ? PointedTicket : UnpointedTicket;
     const title = this.props.pointed ? "Pointed Tickets" : "Unpointed Tickets";
-
+    
     return(
       <React.Fragment>
         <Card className="mt-4" style={{minHeight: '300px'}}>
@@ -19,7 +19,7 @@ class TicketList extends React.Component {
             <CardColumns>
               {this.props.tickets.map((ticket) => (
                   <Card key={ticket._id}>
-                    <TicketComponent ticket={ticket} />
+                    <TicketComponent voters={this.props.voters} ticket={ticket} />
                   </Card>
                 )
               )}

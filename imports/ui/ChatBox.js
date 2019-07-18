@@ -60,7 +60,7 @@ class ChatBox extends React.Component {
       username: Meteor.user().username,
     }
 
-    Meteor.call('messages.create', props, (err) => {
+    Meteor.call('messages.insert', props, (err) => {
       if (err) {
         console.error(err.reason);
         return;

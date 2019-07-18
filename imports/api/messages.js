@@ -8,7 +8,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'messages.create'({ text, location, userId, username }) {
+  'messages.insert'({ text, location, userId, username }) {
     Messages.insert({
       text,
       location,

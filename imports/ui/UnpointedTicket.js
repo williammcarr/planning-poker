@@ -17,13 +17,13 @@ class UnpointedTicket extends React.Component {
   }
 
   handleVote = (e) => {
-    const userId = Meteor.user()._id;
-    const string = `userVotes.${userId}`;
+    const params = {
+      ticketId: this.props.ticket._id,
+      voteValue: e.target.value,
+      voters: this.props.voters,
+    }
 
-    Tickets.update(
-      {_id: this.props.ticket._id},
-      {$set: { [string]: e.target.value } }
-    );
+    Meteor.call('tickets.vote', params);
   }
 
   render() {

@@ -127,7 +127,7 @@ class PokerRoom extends React.Component {
           <Button onClick={this.showTicketModal}>Add Ticket</Button>
           <Row>
             <Col xs={6}>
-              <TicketList tickets={unpointedTickets} pointed={false}/>
+              <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
             </Col>
             <Col xs={6}>
               <TicketList tickets={pointedTickets} pointed={true}/>
