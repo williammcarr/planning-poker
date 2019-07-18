@@ -25,8 +25,8 @@ class App extends React.Component {
           <PageHeader />
           <Switch>
             <Route path="/" exact render={() => <Redirect to="/login" />} />
-            <Route path="/login" exact component={Login}/>
-            <Route path="/register" exact component={Register}/>
+            <Route path="/login" render={() => (this.props.loggedIn ? <Redirect to="/lobby" /> : <Login/>)}/>
+            <Route path="/register" render={() => (this.props.loggedIn ? <Redirect to="/lobby" /> : <Register/>)}/>
             <PrivateRoute loggedIn={this.props.loggedIn} path="/lobby" component={Lobby}/>
             <PrivateRoute loggedIn={this.props.loggedIn} path="/room/:id" component={PokerRoom}/>
             <Route path="*" component={NotFoundPage} />

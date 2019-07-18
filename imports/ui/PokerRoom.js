@@ -113,10 +113,7 @@ class PokerRoom extends React.Component {
   }
 
   render() {
-    if (!Meteor.userId()) {
-      this.props.history.push('/login');
-      return;
-    } else if (this.props.loading) {
+    if (this.props.loading) {
       return <p>Loading...</p>;
     }
 
