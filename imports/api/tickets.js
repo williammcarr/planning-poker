@@ -57,8 +57,7 @@ Meteor.methods({
 
       Tickets.update(
         {_id: ticketId },
-        {$set: { status: 'closed' } },
-        {$set: { points: avg } },
+        {$set: { status: 'closed', points: avg} },
       );
     }
   },
