@@ -10,10 +10,10 @@ class TicketList extends React.Component {
   render() {
     const TicketComponent = this.props.pointed ? PointedTicket : UnpointedTicket;
     const title = this.props.pointed ? "Pointed Tickets" : "Unpointed Tickets";
-    
+
     return(
       <React.Fragment>
-        <Card className="mt-4" style={{minHeight: '300px'}}>
+        <Card className="mt-2" style={{minHeight: '300px'}}>
           <Card.Header>{title}</Card.Header>
           <Card.Body style={{padding: '5px'}}>
             <CardColumns>

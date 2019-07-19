@@ -83,7 +83,7 @@ class ChatBox extends React.Component {
 
     return(
       <React.Fragment>
-        <Card className="mt-4">
+        <Card className="mt-2">
           <Card.Header>Chat</Card.Header>
           <Card.Body style={{ height: 300, overflowY: 'scroll' }}>
             {this.props.messages.map((message) => (

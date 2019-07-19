@@ -28,18 +28,16 @@ class RoomList extends React.Component {
 
     return(
       <React.Fragment>
-        <Card>
+        <Card className="mt-2">
           <Card.Header>Rooms</Card.Header>
-          <Card.Body style={{padding: '7px', height: 300, overflowY: 'scroll'}}>
+          <Card.Body style={{padding: '5px', height: 300, overflowY: 'scroll'}}>
             {rooms.map((room) => (
               <Container key={room._id} style={{height: '31px', margin: '7px'}}>
-                <Row className="justify-content-xs-center self-align-center">
-                  <Col xs="auto">
+                <Row>
+                  <Col xs="auto" style={{paddingLeft: 0, paddingRight: 0}}>
                     <Button style={{marginTop: 'auto', marginBottom: 'auto'}} onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
                   </Col>
-                  <Col style={{paddingLeft: '0'}}>
-                    {room.text}
-                  </Col>
+                  <Col style={{paddingLeft: 0, marginLeft: 10, marginTop: 5}}>{room.text}</Col>
                 </Row>
               </Container>
             ))}

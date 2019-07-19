@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
-import partition from 'lodash/partition';
+import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+
+import partition from 'lodash/partition';
 
 import ChatBox from './ChatBox';
 import { Messages } from '../api/messages.js';
@@ -121,10 +123,13 @@ class PokerRoom extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleLeaveRoom} variant="light">Return to Lobby</Button>
-        <h3 style={{textAlign: 'center'}}>{room.text}</h3>
+        <h1 style={{textAlign: 'center'}}>
+          <Badge variant="dark" style={{marginRight: '2px'}}>Room:</Badge>
+          <Badge variant="success">{room.text}</Badge>
+        </h1>
         <div>
-          <Button onClick={this.showTicketModal}>Add Ticket</Button>
+          <Button onClick={this.showTicketModal} variant="danger">Add Ticket</Button>
+          <Button onClick={this.handleLeaveRoom} variant="dark" style={{ marginRight: 5, marginLeft: 10 }}>Return to Lobby</Button>
           <Row>
             <Col xs={6}>
               <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
@@ -157,7 +162,7 @@ export default withTracker((route) => {
 
   if (!loading) {
     let tickets = Tickets.find({ roomId }).fetch();
-    let partitionedTickets = partition(tickets, (ticket) => ticket.points >= 1);
+    let partitionedTickets = partition(tickets, (ticket) => (ticket.status == 'pointed' || ticket.status == 'closed'));
     pointedTickets = partitionedTickets[0];
     unpointedTickets = partitionedTickets[1];
 

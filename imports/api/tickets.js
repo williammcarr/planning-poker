@@ -1,9 +1,11 @@
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import every from 'lodash/every';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
 import reduce from 'lodash/reduce';
+import uniq from 'lodash/uniq';
 import values from 'lodash/values';
 
 export const Tickets = new Mongo.Collection('tickets');
@@ -25,17 +27,34 @@ Meteor.methods({
       roomId,
       status: 'new',
       userVotes: {},
+      pastVotes: null,
     });
+  },
+  'tickets.updateStatus'({ ticketId, status }) {
+    Tickets.update(
+      {_id: ticketId },
+      {$set: { status: status } },
+    );
+  },
+  'tickets.clearVotes'({ ticketId }) {
+    let ticket = Tickets.findOne({ _id: ticketId });
+
+    Tickets.update(
+      {_id: ticketId },
+      {$set: { pastVotes: ticket.userVotes, userVotes: {} } },
+    );
   },
   'tickets.vote'({ ticketId, voteValue, voters}) {
     let userId = Meteor.userId();
     let ticket = Tickets.findOne({ _id: ticketId });
     let haveVoted = [...keys(ticket.userVotes)];
+    const string = `userVotes.${userId}`;
 
     // Include our vote in haveVoted, as we have not updated the Ticket to include our vote yet
     haveVoted.push(userId);
 
-    const string = `userVotes.${userId}`;
+    voters = uniq(voters);
+    haveVoted = uniq(haveVoted);
 
     Tickets.update(
       {_id: ticketId },
@@ -43,22 +62,21 @@ Meteor.methods({
     );
 
     if (isEqual(haveVoted.sort(), voters.sort())) {
-      let allVoteValues = values(ticket.userVotes);
-      allVoteValues.push(voteValue);
+      let unanimous = every(values(ticket.userVotes), function(val) {
+        return val == voteValue;
+      });
 
-      let totalPoints = 0;
-      let numVotes = haveVoted.length;
-
-      totalPoints = reduce(allVoteValues, function(sum, val) {
-        return sum + parseInt(val);
-      }, 0);
-
-      let avg = Math.round(totalPoints / numVotes);
-
-      Tickets.update(
-        {_id: ticketId },
-        {$set: { status: 'closed', points: avg} },
-      );
+      if (unanimous) {
+        Tickets.update(
+          {_id: ticketId },
+          {$set: { status: 'pointed', points: voteValue } },
+        );
+      } else {
+        Tickets.update(
+          {_id: ticketId },
+          {$set: { status: 'discuss' } },
+        );
+      }
     }
   },
 });
