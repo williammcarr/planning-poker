@@ -49,9 +49,8 @@ class Register extends React.Component {
 
   render() {
     return(
-      <React.Fragment>
         <Row>
-          <Col xs={{ span: 4, offset: 4 }}>
+          <Col sm={{ span: 6, offset: 3 }} md={{ span: 4, offset: 4 }}>
             <h4 style={{textAlign: 'center'}}>Create an Account</h4>
             <Card>
               <Card.Body>
@@ -80,7 +79,6 @@ class Register extends React.Component {
             </Card>
           </Col>
         </Row>
-      </React.Fragment>
     );
   }
 }

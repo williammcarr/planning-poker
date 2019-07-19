@@ -12,22 +12,22 @@ class PointedTicket extends React.Component {
     const ticket = this.props.ticket;
 
     return(
-      <React.Fragment>
+      <Card>
         <Card.Header>{ticket.name}</Card.Header>
         <Card.Body>
           {ticket.description}
-          {ticket.status == 'closed' && 
+          {ticket.status == 'closed' &&
             <Row>
               <Col>
-                <Badge variant="secondary" style={{marginRight: '2px'}}>Votes:</Badge>
-                {values(ticket.userVotes).map((vote, keyIndex) => (<Badge key={keyIndex} variant="info" style={{marginRight: '2px'}}>{vote}</Badge>))}
+                <Badge variant="secondary" style={{ marginRight: 2 }}>Votes:</Badge>
+                {values(ticket.userVotes).map((vote, keyIndex) => (<Badge key={keyIndex} variant="info" style={{ marginRight: 2 }}>{vote}</Badge>))}
               </Col>
             </Row>
           }
         </Card.Body>
         {ticket.points && <Card.Footer>Points: {ticket.points}</Card.Footer>}
-        {ticket.points == null && <Card.Footer>Closed</Card.Footer>}
-      </React.Fragment>
+        {!ticket.points && <Card.Footer>Closed</Card.Footer>}
+      </Card>
     );
   }
 }

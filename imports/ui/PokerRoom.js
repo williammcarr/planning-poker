@@ -123,18 +123,18 @@ class PokerRoom extends React.Component {
 
     return (
       <div>
-        <h1 style={{textAlign: 'center'}}>
-          <Badge variant="dark" style={{marginRight: '2px'}}>Room:</Badge>
+        <h1 style={{ textAlign: 'center' }}>
+          <Badge variant="dark" style={{ marginRight: 2 }}>Room:</Badge>
           <Badge variant="success">{room.text}</Badge>
         </h1>
         <div>
           <Button onClick={this.showTicketModal} variant="danger">Add Ticket</Button>
           <Button onClick={this.handleLeaveRoom} variant="dark" style={{ marginRight: 5, marginLeft: 10 }}>Return to Lobby</Button>
           <Row>
-            <Col xs={6}>
+            <Col md={6}>
               <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
             </Col>
-            <Col xs={6}>
+            <Col md={6}>
               <TicketList tickets={pointedTickets} pointed={true}/>
             </Col>
           </Row>

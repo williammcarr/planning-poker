@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Card from 'react-bootstrap/Card';
-import CardColumns from 'react-bootstrap/CardColumns';
+import CardDeck from 'react-bootstrap/CardDeck';
 
 import UnpointedTicket from './UnpointedTicket';
 import PointedTicket from './PointedTicket';
@@ -13,17 +13,12 @@ class TicketList extends React.Component {
 
     return(
       <React.Fragment>
-        <Card className="mt-2" style={{minHeight: '300px'}}>
+        <Card className="mt-2" style={{ minHeight: 300 }}>
           <Card.Header>{title}</Card.Header>
-          <Card.Body style={{padding: '5px'}}>
-            <CardColumns>
-              {this.props.tickets.map((ticket) => (
-                  <Card key={ticket._id}>
-                    <TicketComponent voters={this.props.voters} ticket={ticket} />
-                  </Card>
-                )
-              )}
-            </CardColumns>
+          <Card.Body style={{ padding: 5 }}>
+            <CardDeck>
+              {this.props.tickets.map(ticket => <TicketComponent key={ticket._id} voters={this.props.voters} ticket={ticket} />)}
+            </CardDeck>
           </Card.Body>
         </Card>
       </React.Fragment>

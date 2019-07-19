@@ -51,25 +51,24 @@ class UnpointedTicket extends React.Component {
     const vote = get(ticket, `userVotes.${userId}`, null);
     const pastVote = get(ticket, `pastVotes.${userId}`, null);
     const voteValues = ['1', '2', '3', '5', '8', '13'];
-    let active = { active: false };
 
     return(
-      <React.Fragment>
+      <Card>
         <Card.Header><a href={`https://on-site.atlassian.net/browse/${ticket.name}`} target="_blank">{ticket.name}</a></Card.Header>
         <Card.Body>
           {ticket.description}
-          {ticket.status == 'revote' && 
+          {ticket.status == 'revote' &&
             <Row>
               <Col>
-                <Badge variant="secondary" style={{marginRight: '2px'}}>Votes:</Badge>
-                {values(ticket.pastVotes).map((vote, keyIndex) => (<Badge key={keyIndex} variant="info" style={{marginRight: '2px'}}>{vote}</Badge>))}
+                <Badge variant="secondary" style={{ marginRight: 2 }}>Votes:</Badge>
+                {values(ticket.pastVotes).map((vote, keyIndex) => (<Badge key={keyIndex} variant="info" style={{ marginRight: 2 }}>{vote}</Badge>))}
               </Col>
             </Row>
-          }          
+          }
         </Card.Body>
         <Card.Footer>
           {ticket.status == 'new' && <Button onClick={this.handlePointing}>Point This Ticket</Button>}
-          {ticket.status == 'discuss' && 
+          {ticket.status == 'discuss' &&
             <React.Fragment>
               <Button onClick={() => this.updateTicketStatus('revote')}>Re-Vote</Button>
               <Button style={{ float: 'right' }} onClick={() => this.updateTicketStatus('closed')}>Close</Button>
@@ -79,12 +78,12 @@ class UnpointedTicket extends React.Component {
             <ButtonGroup>
               {voteValues.map((value) => {
                 let active = { active: (vote === value || (pastVote === value && vote == null)) };
-                return <Button key={value} {...active} onClick={this.handleVote} value={value}>{value}</Button>;
+                return <Button variant="outline-info" key={value} {...active} onClick={this.handleVote} value={value}>{value}</Button>;
               })}
             </ButtonGroup>
           }
         </Card.Footer>
-      </React.Fragment>
+      </Card>
     );
   }
 }

@@ -46,12 +46,11 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Row style={{marginTop: 20}}>
-          <Col xs={{ span: 4, offset: 4 }}>
+        <Row style={{ marginTop: 20 }}>
+          <Col sm={{ span: 6, offset: 3 }} md={{ span: 4, offset: 4 }}>
             <Card>
               <Card.Body>
-                {this.state.errors != '' && <Alert style={{marginTop: '5px'}} variant="danger">{this.state.errors}</Alert>}
+                {this.state.errors != '' && <Alert style={{ marginTop: 5 }} variant="danger">{this.state.errors}</Alert>}
                 <Form onSubmit={this.handleLogin}>
                   <Form.Group>
                     <Form.Label>Username:</Form.Label>
@@ -72,7 +71,6 @@ class Login extends React.Component {
             </Card>
           </Col>
         </Row>
-      </Container>
     );
   }
 }
