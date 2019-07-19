@@ -53,9 +53,9 @@ class UnpointedTicket extends React.Component {
     const voteValues = ['1', '2', '3', '5', '8', '13'];
 
     return(
-      <Card>
+      <Card style={this.props.style}>
         <Card.Header><a href={`https://on-site.atlassian.net/browse/${ticket.name}`} target="_blank">{ticket.name}</a></Card.Header>
-        <Card.Body>
+        <Card.Body style={{ maxWidth: 254 }}>
           {ticket.description}
           {ticket.status == 'revote' &&
             <Row>

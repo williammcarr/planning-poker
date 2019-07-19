@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Badge from 'react-bootstrap/Badge';
+import CardDeck from 'react-bootstrap/CardDeck';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -130,14 +131,10 @@ class PokerRoom extends React.Component {
         <div>
           <Button onClick={this.showTicketModal} variant="danger">Add Ticket</Button>
           <Button onClick={this.handleLeaveRoom} variant="dark" style={{ marginRight: 5, marginLeft: 10 }}>Return to Lobby</Button>
-          <Row>
-            <Col md={6}>
-              <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
-            </Col>
-            <Col md={6}>
-              <TicketList tickets={pointedTickets} pointed={true}/>
-            </Col>
-          </Row>
+          <CardDeck>
+            <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
+            <TicketList tickets={pointedTickets} pointed={true}/>
+          </CardDeck>
         </div>
         <div>
           <ChatBox location={room._id} messages={messages}/>

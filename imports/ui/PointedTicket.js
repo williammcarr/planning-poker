@@ -12,9 +12,9 @@ class PointedTicket extends React.Component {
     const ticket = this.props.ticket;
 
     return(
-      <Card>
+      <Card style={this.props.style}>
         <Card.Header>{ticket.name}</Card.Header>
-        <Card.Body>
+        <Card.Body style={{ maxWidth: 254 }}>
           {ticket.description}
           {ticket.status == 'closed' &&
             <Row>

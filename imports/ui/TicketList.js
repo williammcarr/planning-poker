@@ -16,8 +16,8 @@ class TicketList extends React.Component {
         <Card className="mt-2" style={{ minHeight: 300 }}>
           <Card.Header>{title}</Card.Header>
           <Card.Body style={{ padding: 5 }}>
-            <CardDeck>
-              {this.props.tickets.map(ticket => <TicketComponent key={ticket._id} voters={this.props.voters} ticket={ticket} />)}
+            <CardDeck style={{ display: 'inline-flex', flexWrap: 'wrap' }}>
+              {this.props.tickets.map(ticket => <TicketComponent style={{ marginBottom: 5, flex: '0 0 auto' }} key={ticket._id} voters={this.props.voters} ticket={ticket} />)}
             </CardDeck>
           </Card.Body>
         </Card>
