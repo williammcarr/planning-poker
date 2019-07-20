@@ -60,8 +60,11 @@ class UnpointedTicket extends React.Component {
           {ticket.status == 'revote' &&
             <Row>
               <Col>
-                <Badge variant="secondary" style={{ marginRight: 2 }}>Votes:</Badge>
-                {values(ticket.pastVotes).map((vote, keyIndex) => (<Badge key={keyIndex} variant="info" style={{ marginRight: 2 }}>{vote}</Badge>))}
+                <Badge variant="secondary" style={{ marginRight: 2 }}>Previous Votes:</Badge>
+                {values(ticket.pastVotes).map((vote, keyIndex) => {
+                  let variant = { variant: ticket.pastVotes[userId] == vote ? "info" : "warning" };
+                  return(<Badge key={keyIndex} {...variant} style={{ marginRight: 2 }}>{vote}</Badge>);
+                })}
               </Col>
             </Row>
           }
@@ -77,7 +80,7 @@ class UnpointedTicket extends React.Component {
           {(ticket.status == 'active' || ticket.status == 'revote') &&
             <ButtonGroup>
               {voteValues.map((value) => {
-                let active = { active: (vote === value || (pastVote === value && vote == null)) };
+                let active = { active: vote === value };
                 return <Button variant="outline-info" key={value} {...active} onClick={this.handleVote} value={value}>{value}</Button>;
               })}
             </ButtonGroup>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -25,6 +25,8 @@ class ChatBox extends React.Component {
     if (prevProps.messages.length !== this.props.messages.length) {
       this.setUserColors(this.props.messages);
     }
+
+    this.scrollToBottom();
   }
 
   setUserColors(messages) {
@@ -78,6 +80,13 @@ class ChatBox extends React.Component {
     });
   }
 
+  scrollToBottom() {
+    const scrollHeight = this.messageList.scrollHeight;
+    const height = this.messageList.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+    this.messageList.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+  }
+
   render() {
     const userColors = JSON.parse(localStorage.getItem('userColors'));
 
@@ -85,7 +94,7 @@ class ChatBox extends React.Component {
       <React.Fragment>
         <Card className="mt-2">
           <Card.Header>Chat</Card.Header>
-          <Card.Body style={{ height: 300, overflowY: 'scroll' }}>
+          <Card.Body name="MessageList" ref={(div) => {this.messageList = div;}} style={{ height: 300, overflowY: 'scroll' }}>
             {this.props.messages.map((message) => (
               <Card.Text key={message._id}><span style={{color: `${userColors[message.userId]}`}}>{message.username}:</span> {message.text}</Card.Text>
             ))}
