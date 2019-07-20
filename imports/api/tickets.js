@@ -2,10 +2,8 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import every from 'lodash/every';
-import isEqual from 'lodash/isEqual';
+import includes from 'lodash/includes';
 import keys from 'lodash/keys';
-import reduce from 'lodash/reduce';
-import uniq from 'lodash/uniq';
 import values from 'lodash/values';
 
 export const Tickets = new Mongo.Collection('tickets');
@@ -45,36 +43,32 @@ Meteor.methods({
     );
   },
   'tickets.vote'({ ticketId, voteValue, voters}) {
-    let userId = Meteor.userId();
-    let ticket = Tickets.findOne({ _id: ticketId });
-    let haveVoted = [...keys(ticket.userVotes)];
+    const userId = Meteor.userId();
     const string = `userVotes.${userId}`;
 
-    // Include our vote in haveVoted, as we have not updated the Ticket to include our vote yet
-    haveVoted.push(userId);
-
-    voters = uniq(voters);
-    haveVoted = uniq(haveVoted);
-
     Tickets.update(
-      {_id: ticketId },
-      {$set: { [string]: voteValue } },
+      { _id: ticketId },
+      { $set: { [string]: voteValue } }
     );
 
-    if (isEqual(haveVoted.sort(), voters.sort())) {
-      let unanimous = every(values(ticket.userVotes), function(val) {
-        return val == voteValue;
-      });
+    let ticket = Tickets.findOne({ _id: ticketId });
+
+    const haveVoted = [...keys(ticket.userVotes)];
+    const everyoneHasVoted = every(voters, voter => includes(haveVoted, voter));
+
+    if (everyoneHasVoted) {
+      const unanimous = every(values(ticket.userVotes), vote => vote === voteValue);
 
       if (unanimous) {
+        // this ticket is done
         Tickets.update(
-          {_id: ticketId },
-          {$set: { status: 'pointed', points: voteValue } },
+          { _id: ticketId },
+          { $set: { status: 'pointed', points: voteValue } }
         );
       } else {
         Tickets.update(
-          {_id: ticketId },
-          {$set: { status: 'discuss' } },
+          { _id: ticketId },
+          { $set: { status: 'discuss' } }
         );
       }
     }
