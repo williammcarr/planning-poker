@@ -94,7 +94,7 @@ class ChatBox extends React.Component {
       <React.Fragment>
         <Card className="mt-2">
           <Card.Header>Chat</Card.Header>
-          <Card.Body name="MessageList" ref={(div) => {this.messageList = div;}} style={{ height: 300, overflowY: 'scroll' }}>
+          <Card.Body name="MessageList" ref={(div) => {this.messageList = div;}} style={{ minHeight: '5rem', maxHeight: '15rem', overflowY: 'scroll' }}>
             {this.props.messages.map((message) => (
               <Card.Text key={message._id}><span style={{color: `${userColors[message.userId]}`}}>{message.username}:</span> {message.text}</Card.Text>
             ))}

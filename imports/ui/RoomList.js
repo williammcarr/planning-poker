@@ -30,16 +30,13 @@ class RoomList extends React.Component {
       <React.Fragment>
         <Card className="mt-2">
           <Card.Header>Rooms</Card.Header>
-          <Card.Body style={{padding: '5px', height: 300, overflowY: 'scroll'}}>
+          <Card.Body style={{ padding: '0.5rem', height: '15rem', overflowY: 'scroll' }}>
             {rooms.map((room) => (
-              <Container key={room._id} style={{height: '31px', margin: '7px'}}>
-                <Row>
-                  <Col xs="auto" style={{paddingLeft: 0, paddingRight: 0}}>
-                    <Button style={{marginTop: 'auto', marginBottom: 'auto'}} onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
-                  </Col>
-                  <Col style={{paddingLeft: 0, marginLeft: 10, marginTop: 5}}>{room.text}</Col>
-                </Row>
-              </Container>
+              <p style={{ marginBottom: '0.5rem' }}>
+                <Button onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
+                {' '}
+                {room.text}
+              </p>
             ))}
           </Card.Body>
         </Card>

@@ -3,7 +3,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
@@ -82,15 +81,25 @@ class Lobby extends React.Component {
     const { messages, rooms } = this.props;
 
     return (
-      <Container fluid>
-        <div>
-          <Button variant="danger" onClick={this.showRoomModal}>Create New Room</Button>
-          <Button onClick={this.logout} variant="dark" style={{ marginLeft: 10 }}>Logout</Button>
-          <RoomList rooms={rooms}/>
-          <ChatBox location="lobby" messages={messages}/>
-          {this.roomModal()}
-        </div>
-      </Container>
+      <React.Fragment>
+        <Row>
+          <Col xs={12}>
+            <Button variant="danger" onClick={this.showRoomModal}>Create New Room</Button>
+            <Button onClick={this.logout} variant="dark" style={{ marginLeft: 10 }}>Logout</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <RoomList rooms={rooms}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <ChatBox location="lobby" messages={messages}/>
+          </Col>
+        </Row>
+        {this.roomModal()}
+      </React.Fragment>
     );
   }
 }

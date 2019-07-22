@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Badge from 'react-bootstrap/Badge';
-import CardDeck from 'react-bootstrap/CardDeck';
+import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import CardDeck from 'react-bootstrap/CardDeck';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -13,11 +14,12 @@ import Row from 'react-bootstrap/Row';
 
 import partition from 'lodash/partition';
 
-import ChatBox from './ChatBox';
 import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
-import TicketList from './TicketList';
 import { Tickets } from '../api/tickets.js';
+
+import ChatBox from './ChatBox';
+import TicketList from './TicketList';
 
 class PokerRoom extends React.Component {
   constructor(props) {
@@ -123,24 +125,38 @@ class PokerRoom extends React.Component {
     const { room, messages, pointedTickets, unpointedTickets } = this.props;
 
     return (
-      <div>
-        <h1 style={{ textAlign: 'center' }}>
-          <Badge variant="dark" style={{ marginRight: 2 }}>Room:</Badge>
-          <Badge variant="success">{room.text}</Badge>
-        </h1>
-        <div>
-          <Button onClick={this.showTicketModal} variant="danger">Add Ticket</Button>
-          <Button onClick={this.handleLeaveRoom} variant="dark" style={{ marginRight: 5, marginLeft: 10 }}>Return to Lobby</Button>
-          <CardDeck>
-            <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
-            <TicketList tickets={pointedTickets} pointed={true}/>
-          </CardDeck>
-        </div>
-        <div>
-          <ChatBox location={room._id} messages={messages}/>
-        </div>
+      <React.Fragment>
+        <Row>
+          <Col xs={12}>
+            <h2 style={{ textAlign: 'center' }}>
+              <Badge variant="dark" style={{ marginRight: 2 }}>Room:</Badge>
+              <Badge variant="success">{room.text}</Badge>
+            </h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <Button onClick={this.showTicketModal} variant="danger">Add Ticket</Button>
+            <Button onClick={this.handleLeaveRoom} variant="dark" style={{ marginRight: 5, marginLeft: 10 }}>Return to Lobby</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <CardDeck>
+              <TicketList voters={room.voters} tickets={unpointedTickets} pointed={false}/>
+              <TicketList tickets={pointedTickets} pointed={true}/>
+            </CardDeck>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={8}>
+            <ChatBox location={room._id} messages={messages}/>
+          </Col>
+          <Col xs={4}>
+          </Col>
+        </Row>
         {this.ticketModal()}
-      </div>
+      </React.Fragment>
     );
   }
 }

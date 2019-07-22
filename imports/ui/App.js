@@ -1,5 +1,6 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import Container from 'react-bootstrap/Container';
 
 import Lobby from './Lobby';
 import Login from './Login';
@@ -21,7 +22,7 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <div>
+        <Container fluid>
           <PageHeader />
           <Switch>
             <Route path="/" exact render={() => <Redirect to="/login" />} />
@@ -31,7 +32,7 @@ class App extends React.Component {
             <PrivateRoute loggedIn={this.props.loggedIn} path="/room/:id" component={PokerRoom}/>
             <Route path="*" component={NotFoundPage} />
           </Switch>
-        </div>
+        </Container>
       </Router>
     );
   }
