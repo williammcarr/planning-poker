@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
 import partition from 'lodash/partition';
+import reduce from 'lodash/reduce';
 
 import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
@@ -122,7 +123,7 @@ class PokerRoom extends React.Component {
       return <p>Loading...</p>;
     }
 
-    const { room, messages, pointedTickets, unpointedTickets } = this.props;
+    const { room, messages, pointedTickets, unpointedTickets, userMap } = this.props;
 
     return (
       <React.Fragment>
@@ -153,6 +154,12 @@ class PokerRoom extends React.Component {
             <ChatBox location={room._id} messages={messages}/>
           </Col>
           <Col xs={4}>
+            <Card className="mt-2">
+              <Card.Header>Voters</Card.Header>
+              <Card.Body style={{ padding: '0.5rem', height: '15rem', overflowY: 'scroll' }}>
+                {room.voters.map(userId => (<p key={userId}>{userMap[userId]}</p>))}
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
         {this.ticketModal()}
@@ -166,12 +173,14 @@ export default withTracker((route) => {
   const messagesHandle = Meteor.subscribe('messages', roomId);
   const roomHandle = Meteor.subscribe('room', roomId);
   const ticketsHandle = Meteor.subscribe('tickets', roomId);
-  const loading = !ticketsHandle.ready() || !messagesHandle.ready() || !roomHandle.ready();
+  const usersHandle = Meteor.subscribe('user.names');
+  const loading = !ticketsHandle.ready() || !messagesHandle.ready() || !roomHandle.ready() || !usersHandle.ready();;
 
   let messages = [];
   let pointedTickets = [];
   let room = {};
   let unpointedTickets = [];
+  let userMap = {};
 
   if (!loading) {
     let tickets = Tickets.find({ roomId }).fetch();
@@ -181,6 +190,11 @@ export default withTracker((route) => {
 
     room = Rooms.findOne(roomId);
     messages = Messages.find({ location: roomId }, { sort: { createdAt: 1 } }).fetch();
+    let users = Meteor.users.find().fetch();
+    userMap = reduce(users, (hash, user) => {
+      hash[user._id] = user.username;
+      return hash;
+    }, {});
   }
 
   return {
@@ -189,5 +203,6 @@ export default withTracker((route) => {
     pointedTickets,
     room,
     unpointedTickets,
+    userMap,
   };
 })(PokerRoom);
