@@ -173,7 +173,7 @@ export default withTracker((route) => {
   const messagesHandle = Meteor.subscribe('messages', roomId);
   const roomHandle = Meteor.subscribe('room', roomId);
   const ticketsHandle = Meteor.subscribe('tickets', roomId);
-  const usersHandle = Meteor.subscribe('user.names');
+  const usersHandle = Meteor.subscribe('users');
   const loading = !ticketsHandle.ready() || !messagesHandle.ready() || !roomHandle.ready() || !usersHandle.ready();;
 
   let messages = [];

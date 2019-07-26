@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 
 import ChatBox from './ChatBox';
 import RoomList from './RoomList';
+import OnlineUsers from './OnlineUsers';
 import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
 
@@ -78,7 +79,7 @@ class Lobby extends React.Component {
       return <p>Loading...</p>;
     }
 
-    const { messages, rooms } = this.props;
+    const { messages, rooms, users } = this.props;
 
     return (
       <React.Fragment>
@@ -86,6 +87,11 @@ class Lobby extends React.Component {
           <Col xs={12}>
             <Button variant="danger" onClick={this.showRoomModal}>Create New Room</Button>
             <Button onClick={this.logout} variant="dark" style={{ marginLeft: 10 }}>Logout</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <OnlineUsers users={users} />
           </Col>
         </Row>
         <Row>
@@ -107,19 +113,23 @@ class Lobby extends React.Component {
 export default withTracker(() => {
   const roomHandle = Meteor.subscribe('rooms.all');
   const messagesHandle = Meteor.subscribe('messages', 'lobby');
-  const loading = !roomHandle.ready() || !messagesHandle.ready();
+  const usersHandle = Meteor.subscribe('users');
+  const loading = !roomHandle.ready() || !messagesHandle.ready() || !usersHandle.ready();
 
   let messages = [];
   let rooms = [];
+  let users = [];
 
   if (!loading) {
     messages = Messages.find({location: 'lobby'}, { sort: { createdAt: 1 } }).fetch();
     rooms = Rooms.find({}, { sort: { createdAt: -1 } }).fetch();
+    users = Meteor.users.find().fetch();
   }
 
   return {
     loading,
     messages,
     rooms,
+    users,
   };
 })(Lobby);

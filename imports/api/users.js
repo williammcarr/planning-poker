@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 
 if (Meteor.isServer) {
-  Meteor.publish('user.names', () => Meteor.users.find({}, { fields: {username: 1}}));
+  Meteor.publish('users', () => Meteor.users.find({}, { fields: { username: 1, status: 1 } }));
 }
 
 Meteor.methods({
