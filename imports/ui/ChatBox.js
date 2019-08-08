@@ -29,6 +29,10 @@ class ChatBox extends React.Component {
     this.scrollToBottom();
   }
 
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
   setUserColors(messages) {
     let userColors = {};
 

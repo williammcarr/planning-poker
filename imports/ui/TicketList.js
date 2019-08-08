@@ -13,7 +13,7 @@ class TicketList extends React.Component {
 
     return(
       <React.Fragment>
-        <Card className="mt-2" style={{ minHeight: 300 }}>
+        <Card className="mt-2" style={{ height: '25rem', overflowY: 'scroll' }}>
           <Card.Header>{title}</Card.Header>
           <Card.Body style={{ paddingTop: 15, paddingLeft: 15, paddingRight: 15, paddingBottom: 0 }}>
             <CardDeck style={{ display: 'inline-flex', flexWrap: 'wrap'}}>

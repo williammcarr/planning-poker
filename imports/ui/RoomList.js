@@ -28,11 +28,11 @@ class RoomList extends React.Component {
 
     return(
       <React.Fragment>
-        <Card className="mt-2">
+        <Card className="mt-2" style={{marginLeft: 0, marginRight: 0}}>
           <Card.Header>Rooms</Card.Header>
           <Card.Body style={{ padding: '0.5rem', height: '15rem', overflowY: 'scroll' }}>
-            {rooms.map((room) => (
-              <p style={{ marginBottom: '0.5rem' }}>
+            {rooms.map((room, index) => (
+              <p key={index} style={{ marginBottom: '0.5rem' }}>
                 <Button onClick={this.handleJoinRoom} value={room._id} size="sm">Join</Button>
                 {' '}
                 {room.text}

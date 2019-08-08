@@ -12,14 +12,17 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
+import filter from 'lodash/filter';
 import partition from 'lodash/partition';
 import reduce from 'lodash/reduce';
+import reject from 'lodash/reject';
 
 import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
 import { Tickets } from '../api/tickets.js';
 
 import ChatBox from './ChatBox';
+import OnlineUsersList from './OnlineUsersList';
 import TicketList from './TicketList';
 
 class PokerRoom extends React.Component {
@@ -150,16 +153,11 @@ class PokerRoom extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={8}>
+          <Col xs={9}>
             <ChatBox location={room._id} messages={messages}/>
           </Col>
-          <Col xs={4}>
-            <Card className="mt-2">
-              <Card.Header>Voters</Card.Header>
-              <Card.Body style={{ padding: '0.5rem', height: '15rem', overflowY: 'scroll' }}>
-                {room.voters.map(userId => (<p key={userId}>{userMap[userId]}</p>))}
-              </Card.Body>
-            </Card>
+          <Col xs={3}>
+            <OnlineUsersList title="Voters" location={room._id} />
           </Col>
         </Row>
         {this.ticketModal()}

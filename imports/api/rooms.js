@@ -22,27 +22,34 @@ if (Meteor.isServer) {
 Meteor.methods({
   'rooms.insert'(text) {
     const user = Meteor.user();
+    const userId = Meteor.userId();
 
     return Rooms.insert({
       text,
-      userId: user._id,
+      userId: userId,
       username: user.username,
-      voters: [user._id],
+      voters: [userId],
       createdAt: moment().unix(),
     });
   },
   'rooms.join'({ roomId }) {
-    const user = Meteor.user();
+    const userId = Meteor.userId();
     const room = Rooms.findOne(roomId);
 
-    if (includes(room.voters, user._id)) return;
+    if (includes(room.voters, userId)) return;
 
-    Rooms.update({ _id: roomId }, { $push: { voters: user._id } });
+    Rooms.update({ _id: roomId }, { $push: { voters: userId } });
+    Meteor.users.update({ _id: userId }, { $push: { rooms: roomId } });
   },
   'rooms.leave'({ roomId }) {
     const room = Rooms.findOne(roomId);
     const user = Meteor.user();
-    const voters = reject(room.voters, voterId => voterId === user._id);
+    const userId = Meteor.userId();
+    
+    const voters = reject(room.voters, (voterId) => (voterId === userId));
+    const rooms = reject(user.locations, (location) => (location === roomId));
+
     Rooms.update({ _id: roomId }, { $set: { voters } });
+    Meteor.users.update({ _id: userId }, { $set: { rooms: rooms } });
   },
 });

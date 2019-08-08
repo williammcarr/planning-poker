@@ -2,14 +2,16 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Button from 'react-bootstrap/Button';
+import CardDeck from 'react-bootstrap/CardDeck';
 import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
 import ChatBox from './ChatBox';
+import OnlineUsersList from './OnlineUsersList';
 import RoomList from './RoomList';
-import OnlineUsers from './OnlineUsers';
 import { Messages } from '../api/messages.js';
 import { Rooms } from '../api/rooms.js';
 
@@ -79,7 +81,7 @@ class Lobby extends React.Component {
       return <p>Loading...</p>;
     }
 
-    const { messages, rooms, users } = this.props;
+    const { messages, rooms } = this.props;
 
     return (
       <React.Fragment>
@@ -90,13 +92,11 @@ class Lobby extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
-            <OnlineUsers users={users} />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
+          <Col xs={9}>
             <RoomList rooms={rooms}/>
+          </Col>
+          <Col xs={3}>
+            <OnlineUsersList />
           </Col>
         </Row>
         <Row>
@@ -113,23 +113,19 @@ class Lobby extends React.Component {
 export default withTracker(() => {
   const roomHandle = Meteor.subscribe('rooms.all');
   const messagesHandle = Meteor.subscribe('messages', 'lobby');
-  const usersHandle = Meteor.subscribe('users');
-  const loading = !roomHandle.ready() || !messagesHandle.ready() || !usersHandle.ready();
+  const loading = !roomHandle.ready() || !messagesHandle.ready();
 
   let messages = [];
   let rooms = [];
-  let users = [];
 
   if (!loading) {
     messages = Messages.find({location: 'lobby'}, { sort: { createdAt: 1 } }).fetch();
     rooms = Rooms.find({}, { sort: { createdAt: -1 } }).fetch();
-    users = Meteor.users.find().fetch();
   }
 
   return {
     loading,
     messages,
     rooms,
-    users,
   };
 })(Lobby);
